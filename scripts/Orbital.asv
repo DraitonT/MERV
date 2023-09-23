@@ -550,14 +550,10 @@ function [DV_dep, DV_arr, transferTime] = interplantarySolver(departurePlanet, t
                 planetTheta2 = arrivalplanetTheta + n * t;                                                  %[deg]
                 earthTheta2 = depaturePlanetTheta + n * t;                                                  %[deg]
                 semiMajor = (targetPlanet.semiMajor + departurePlanet.semiMajor)/2;                         %[km] | Semi-major of the Hohmann transfer
-                if targetPlanet.name == "Earth's Moon" && departurePlanet.name == "Earth" 
+                if targetPlanet.name == "Earth's Moon" && departurePlanet.name == "Earth" || departurePlanet.name == "Earth's Moon" && targetPlanet.name == "Earth" 
                     transferTime = (pi / sqrt(departurePlanet.mu)) * ((targetPlanet.semiMajor + departurePlanet.R)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
-                elseif departurePlanet.name == "Earth's Moon" && targetPlanet.name == "Earth" 
-                    transferTime = (pi / sqrt(targetPlanet.mu)) * ((targetPlanet.R + departurePlanet.semiMajor)/2)^(3/2);
-                elseif  departurePlanet.name == "Earth's Moon" && targetPlanet.name ~= "Earth" 
-                    transferTime = (pi / sqrt(muSun)) * ((149984400 + targetPlanet.semiMajor)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
-                elseif departurePlanet.name ~= "Earth" && targetPlanet.name == "Earth's Moon"
-                    transferTime = (pi / sqrt(muSun)) * ((149984400 + departurePlanet.semiMajor)/2)^(3/2);
+                elseif  departurePlanet.name == "Earth's Moon" && targetPlanet.name ~= "Earth" || departurePlanet.name ~= "Earth" && targetPlanet.name ~= "Earth"
+                    transferTime = (pi / sqrt(departurePlanet.mu)) * ((targetPlanet.semiMajor + 149984400)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
                 else
                     transferTime =(pi / sqrt(muSun)) * ((targetPlanet.semiMajor + departurePlanet.semiMajor)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
                 end
