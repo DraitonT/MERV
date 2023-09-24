@@ -551,9 +551,9 @@ function [DV_dep, DV_arr, transferTime] = interplantarySolver(departurePlanet, t
                 earthTheta2 = depaturePlanetTheta + n * t;                                                  %[deg]
                 semiMajor = (targetPlanet.semiMajor + departurePlanet.semiMajor)/2;                         %[km] | Semi-major of the Hohmann transfer
                 if targetPlanet.name == "Earth's Moon" && departurePlanet.name == "Earth" 
-                    transferTime = (pi / sqrt(departurePlanet.mu)) * ((targetPlanet.semiMajor + departurePlanet.R)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
+                    transferTime = (pi / sqrt(departurePlanet.mu)) * ((384.4E3 + departurePlanet.R)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
                 elseif departurePlanet.name == "Earth's Moon" && targetPlanet.name == "Earth" 
-                    transferTime = (pi / sqrt(targetPlanet.mu)) * ((targetPlanet.R + departurePlanet.semiMajor)/2)^(3/2);
+                    transferTime = (pi / sqrt(targetPlanet.mu)) * ((targetPlanet.R + 384.4E3)/2)^(3/2);
                 elseif  departurePlanet.name == "Earth's Moon" && targetPlanet.name ~= "Earth" 
                     transferTime = (pi / sqrt(muSun)) * ((149984400 + targetPlanet.semiMajor)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
                 elseif departurePlanet.name ~= "Earth" && targetPlanet.name == "Earth's Moon"
@@ -761,7 +761,7 @@ function [DV_dep, DV_arr, transferTime] = interplantarySolver(departurePlanet, t
                         TTP.R = TP.R(3);
                     case "Earth's Moon"
                         TTP.name = TP.name(4);
-                        TTP.semiMajor = TP.semiMajor(4);
+                        TTP.semiMajor = TP.semiMajor(3) + TP.semiMajor(4);
                         TTP.mu = TP.mu(4);
                         TTP.e = TP.e(4);
                         TTP.OSP = TP.OSP(4);
