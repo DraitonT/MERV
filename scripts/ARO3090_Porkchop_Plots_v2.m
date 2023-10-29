@@ -12,7 +12,7 @@ clc;clear;close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Departure & Arrival Planets
 Planet_1 = 'Earth';   % Departure Planet
-Planet_2 = 'Jupiter'; % Arrival Planet
+Planet_2 = 'Mars'; % Arrival Planet
 
 %% Launch Dates 
 % First and Last possible launch dates
@@ -21,8 +21,8 @@ After_ILD  = +50; %[>0 days] after Hohmann      (Recommended: Mercury=+50, Venus
 dJD = 1;          %[days] Launch date increment (Recommended: All Planets<=1)
 
 %% Time of Flight (TOF)
-TOF_min = 400;   %[days] Minimum TOF   (Recommended: Mercury=50,  Venus=80,  Mars=80, Jupiter=400,  Saturn=900,  Uranus=2500, Neptune=5000)
-TOF_max = 1500;  %[days] Maximum TOF   (Recommended: Mercury=150, Venus=200, Mars=500, Jupiter=1500, Saturn=3500, Uranus=8000, Neptune=10000)
+TOF_min = 0;   %[days] Minimum TOF   (Recommended: Mercury=50,  Venus=80,  Mars=80, Jupiter=400,  Saturn=900,  Uranus=2500, Neptune=5000)
+TOF_max = 320;  %[days] Maximum TOF   (Recommended: Mercury=150, Venus=200, Mars=500, Jupiter=1500, Saturn=3500, Uranus=8000, Neptune=10000)
 dTOF = 10;       %[days] TOF increment (Recommended: Mercury<=1,  Venus<=2,  Mars<=5,  Jupiter<=10,  Saturn<=40,  Uranus<=100, Neptune<=100)
 
 %% Maximum C3 Capability

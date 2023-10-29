@@ -11,15 +11,15 @@ clc;clear;close all
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%% EDITABLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Departure & Arrival Planets
-Planet_1 = 'Jupiter'; % Departure Planet
-Planet_2 = 'Neptune';   % Arrival Planet
+Planet_1 = 'Earth'; % Departure Planet
+Planet_2 = 'Mars';   % Arrival Planet
 
 %% Launch Date 
-yyyy = 2031;  mm = 2;  dd = 24;
-Additional_Days = 660; %Additional days added (or subtracted to Launch Date)
+yyyy = 2022;  mm = 8;  dd = 25;
+Additional_Days = 0; %Additional days added (or subtracted to Launch Date)
 
 %% Time of Flight (TOF)
-TOF = 4060;
+TOF = 320;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% %%%%%%%%%%%%%%%%%%%%%%%%% DO NOT EDIT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,7 +64,7 @@ Options = optimoptions('fsolve','Display','off','TolFun',1E-12,'TolX',1E-12);
 % Using 432t as it is the latest Ephemeris available for the function
 [r1_vec,VP1_dep] = planetEphemeris(JD_Dep','Sun',Planet_1,'432t');  
  % Creating column vectors
-r1_vec=r1_vec';   VP1_dep=VP1_dep';   r1 = vecnorm(r1_vec);
+r1_vec=[1.315386533115567E8, -7.200148094172376E7, 3.259147626853362E4]';   VP1_dep=[1.374271621633860E1, 2.605497393397116E1, -1.421352374887164E-3]';   r1 = vecnorm(r1_vec);
 JD_Arr = JD_Dep + TOF; % Julian Day
 
 Dep = datetime(JD_Dep,'convertfrom','juliandate');
@@ -76,7 +76,7 @@ yyyyA=year(Arr); mmA=month(Arr); ddA=day(Arr);
 [r2_vec,VP2_arr] = planetEphemeris(JD_Arr','Sun',Planet_2,'432t');
 
 % Creating column vectors
-r2_vec=r2_vec';   VP2_arr=VP2_arr';   r2 = vecnorm(r2_vec);
+r2_vec=[-2.480149682310914E8, 2.311697912825998E7, 6.573435869818931E6]';   VP2_arr=[-1.373649815999955, -2.206771889922939E1, -4.283702423805122E-1]';   r2 = vecnorm(r2_vec);
 
 % True Anomaly Difference
 DTA_S = acos(dot(r1_vec,r2_vec)./(r1.*r2));
