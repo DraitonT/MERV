@@ -10,8 +10,8 @@ clc, clear, close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EDITABLE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 0.0 Seledct Design to View
-    designA = true; % Earth to Gateway to Venus and back
-    designB = false;  % Earth to Venus directly and back
+    designA = false; % Earth to Gateway to Venus and back
+    designB = true;  % Earth to Venus directly and back
 %% 1.0 Initial Conditions
     departurePlanetPhase1= "Earth"; %Departure planet
     targetPlanetPhase1 = "Earth's Moon";  %Arrival planet

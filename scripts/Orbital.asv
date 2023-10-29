@@ -760,6 +760,7 @@ function [DV_dep, DV_arr, transferTime] = interplantarySolver2(departurePlanet, 
                 else
                     transferTime =(pi / sqrt(324859)) * (((6052+z_parking_per_dep) + (6052+z_parking_per_arr))/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
                 end
+                
                 h = sqrt(2 * muSun) * sqrt((targetPlanet.semiMajor * departurePlanet.semiMajor)/(targetPlanet.semiMajor + departurePlanet.semiMajor)); %[km^2/s] | Angular momentum of the Hohmann Transfer
                 e = (targetPlanet.semiMajor-departurePlanet.semiMajor) / (targetPlanet.semiMajor + departurePlanet.semiMajor);                         %[] | Eccentricity of the Hohmann Transfer
                 tSyn = 2*pi/ (nDepature - n);                   
