@@ -86,7 +86,7 @@ if designB
     [DV_dep_earthVenus, DV_arr_earthVenus, transferTime_earthVenus] = Orbital.interplantarySolver(departurePlanetPhase1, targetPlanetPhase2, Isp_dep, Isp_arr, zp_Earth, za_Earth, zp_Venus, za_Venus);
     [DV_dep_venusEarth, DV_arr_venusEarth, transferTime_venusEarth] = Orbital.interplantarySolver(targetPlanetPhase2, departurePlanetPhase1, Isp_dep, Isp_arr, zp_Venus, za_Venus, zp_Earth, za_Earth);
     
-    total_dv = DV_dep_earthVenus+ DV_arr_earthVenus;
+    total_dv = DV_dep_earthVenus+ DV_arr_earthVenus+ DV_dep_venusEarth+DV_arr_venusEarth;
     totalTime = (transferTime_earthVenus + transferTime_venusEarth)/86400;
 
     fprintf('\n -----------------------------\n');
