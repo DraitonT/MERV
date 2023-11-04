@@ -1019,5 +1019,36 @@ end
                 end
               
         end
+    %% 4.0 Attitude Determination and Controls
+        %% 4.1 Rotation Matrix to Quaternions
+        function q = R_to_Quaternions(R)
+            q0sq = 0.25*(1+R(1,1)+R(2,2)+R(3,3));
+            q1sq = 0.25*(1+R(1,1)-R(2,2)-R(3,3));
+            q2sq = 0.25*(1+R(2,2)-R(1,1)-R(3,3));
+            q3sq = 0.25*(1+R(3,3)-R(1,1)-R(2,2));
+            if q0sq==max([q0sq,q1sq,q2sq,q3sq])
+                q0 = sqrt(q0sq);
+                q1 = 1/(4*q0)*(R(3,2)-R(2,3));
+                q2 = 1/(4*q0)*(R(1,3)-R(3,1));
+                q3 = 1/(4*q0)*(R(2,1)-R(1,2));
+            elseif q1sq==max([q0sq,q1sq,q2sq,q3sq])
+                q1 = sqrt(q1sq);
+                q0 = 1/(4*q1)*(R(3,2)-R(2,3));
+                q2 = 1/(4*q1)*(R(2,1)+R(1,2));
+                q3 = 1/(4*q1)*(R(1,3)+R(3,1));
+            elseif q2sq==max([q0sq,q1sq,q2sq,q3sq])
+                q2 = sqrt(q2sq);
+                q0 = 1/(4*q2)*(R(1,3)-R(3,1));
+                q1 = 1/(4*q2)*(R(2,1)+R(1,2));
+                q3 = 1/(4*q2)*(R(3,2)+R(2,3));
+            else
+                q3 = sqrt(q3sq);
+                q0 = 1/(4*q3)*(R(2,1)-R(1,2));
+                q1 = 1/(4*q3)*(R(1,3)+R(3,1));
+                q2 = 1/(4*q3)*(R(3,2)+R(2,3));
+            end
+            q = [q0,q1,q2,q3]';
+            q = q/norm(q);
+        end
     end
 end
