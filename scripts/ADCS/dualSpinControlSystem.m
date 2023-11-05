@@ -58,10 +58,19 @@ Time vs. Idealized and Actual Pitch
         p_0_B = 0;     %[deg/s]
         q_0_B = 10;     %[deg/s]
         r_0_B = 300;    %[deg/s] 
+%     %% 0.5 Inertia Moments
+%         Ixx = 44451.50/10000; %[kg*m^2]
+%         Iyy = 45161.45/10000; %[kg*m^2]
+%         Izz = 44017.00/10000; %[kg*m^2]
+%     %% 0.6 Inertia Products
+%         Ixy = 378.08/10000; %[kg*m^2]
+%         Ixz = 108.92/10000; %[kg*m^2]
+%         Iyz = -3273.58/10000; %[kg*m^2]
+
     %% 0.5 Inertia Moments
-        Ixx = 44451.50/10000; %[kg*m^2]
-        Iyy = 45161.45/10000; %[kg*m^2]
-        Izz = 44017.00/10000; %[kg*m^2]
+        Ixx = 44451.50; %[kg*m^2]
+        Iyy = 45161.45; %[kg*m^2]
+        Izz = 44017.00; %[kg*m^2]
     %% 0.6 Inertia Products
         Ixy = 378.08/10000; %[kg*m^2]
         Ixz = 108.92/10000; %[kg*m^2]

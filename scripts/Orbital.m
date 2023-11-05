@@ -1050,5 +1050,31 @@ end
             q = [q0,q1,q2,q3]';
             q = q/norm(q);
         end
+        %% 4.2 Euler Angles to Rotation Matrix 
+        function R = EulerAngles_to_R(THETA)
+
+        psi   = THETA(1);
+        theta = THETA(2);
+        phi   = THETA(3);
+        
+        R =[                                cosd(psi)*cosd(theta),                                 cosd(theta)*sind(psi),          -sind(theta)
+            cosd(psi)*sind(phi)*sind(theta) - cosd(phi)*sind(psi), sind(phi)*sind(psi)*sind(theta) + cosd(psi)*cosd(phi), sind(phi)*cosd(theta)
+            cosd(psi)*cosd(phi)*sind(theta) + sind(phi)*sind(psi), cosd(phi)*sind(psi)*sind(theta) - cosd(psi)*sind(phi), cosd(phi)*cosd(theta)];
+        end
+
+        %% 4.3 Rotation Matrix to Euler Angles 
+        function [psi,theta,phi] = R_to_EulerAngles(R)
+            % Euler Angles
+            phi   = atan2d(R(2,3),R(3,3)); % Roll  [-180,180] deg
+            theta = asind(-R(1,3));        % Pitch [-90,90]   deg
+            psi   = atan2d(R(1,2),R(1,1)); % Yaw   [0,360]    deg
+            if psi<0
+                psi=mod(psi+360,360);
+            end
+            if theta==-90 || theta==90
+                fprintf('Singularity encountered. Values for roll and yaw angles are not reliable.\n')
+                fprintf('Quarternions should be used instead.\n\n')
+            end
+        end
     end
 end
