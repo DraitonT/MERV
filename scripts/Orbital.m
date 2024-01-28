@@ -749,17 +749,6 @@ function [DV_dep, DV_arr, transferTime] = interplantarySolver2(departurePlanet, 
                 planetTheta2 = arrivalplanetTheta + n * t;                                                  %[deg]
                 earthTheta2 = depaturePlanetTheta + n * t;                                                  %[deg]
                 semiMajor = (targetPlanet.semiMajor + departurePlanet.semiMajor)/2;                         %[km] | Semi-major of the Hohmann transfer
-                if targetPlanet.name == "Earth's Moon" && departurePlanet.name == "Earth" 
-                    transferTime = (pi / sqrt(departurePlanet.mu)) * ((384.4E3 + departurePlanet.R)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
-                elseif departurePlanet.name == "Earth's Moon" && targetPlanet.name == "Earth" 
-                    transferTime = (pi / sqrt(targetPlanet.mu)) * ((targetPlanet.R + 384.4E3)/2)^(3/2);
-                elseif  departurePlanet.name == "Earth's Moon" && targetPlanet.name ~= "Earth" 
-                    transferTime = (pi / sqrt(muSun)) * ((149984400 + targetPlanet.semiMajor)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
-                elseif departurePlanet.name ~= "Earth" && targetPlanet.name == "Earth's Moon"
-                    transferTime = (pi / sqrt(muSun)) * ((149984400 + departurePlanet.semiMajor)/2)^(3/2);
-                else
-                    transferTime =(pi / sqrt(324859)) * (((6052+z_parking_per_dep) + (6052+z_parking_per_arr))/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
-                end
 
                 h = sqrt(2 * muSun) * sqrt((targetPlanet.semiMajor * departurePlanet.semiMajor)/(targetPlanet.semiMajor + departurePlanet.semiMajor)); %[km^2/s] | Angular momentum of the Hohmann Transfer
                 e = (targetPlanet.semiMajor-departurePlanet.semiMajor) / (targetPlanet.semiMajor + departurePlanet.semiMajor);                         %[] | Eccentricity of the Hohmann Transfer

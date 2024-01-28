@@ -1,0 +1,6 @@
+name = "Genesis-v0.3.0"
+uuid = "c76a325f-edc2-48e1-8f84-1cb8cd9bd368"
+repo = "M:\\dev\\repos\\Genesis-v0.3.0\\Genesis-v0.3.0"
+description = "Genesis v0.3.0 release registry"
+
+[packages]
