@@ -27,7 +27,7 @@ function run()
                                   frame=PCI(earth)))
 
     set_position!(parent,
-                  planetodetic_altitude=10 * 1000,
+                  planetodetic_altitude=100 * 1000,
                   planetodetic_latitude=0,
                   longitude=0)
 
