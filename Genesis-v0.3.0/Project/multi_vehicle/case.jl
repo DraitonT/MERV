@@ -8,11 +8,11 @@ function run()
     integ = DP5(time)
 
     executive = Executive(integ,
-                          stop_time=100)
+                          stop_time=100 * 10)
+    Earth
+    venus = Europa(time)
 
-    earth = Earth(time)
-
-    parent = Vehicle(earth)
+    parent = Vehicle(venus)
     add!(executive, parent)
 
     set_mass_properties!(parent,
@@ -24,10 +24,10 @@ function run()
     configure!(parent,
                PrescribedAttitude(parent,
                                   rotation=I,
-                                  frame=PCI(earth)))
+                                  frame=PCI(venus)))
 
     set_position!(parent,
-                  planetodetic_altitude=100 * 1000,
+                  planetodetic_altitude=100 * 10000,
                   planetodetic_latitude=0,
                   longitude=0)
 
@@ -36,7 +36,7 @@ function run()
                   planetodetic_planet_relative_flight_path_angle=-10/180*pi,
                   planetodetic_planet_relative_azimuth=0)
 
-    child = Vehicle(earth)
+    child = Vehicle(venus)
     add!(executive, child)
 
     set_mass_properties!(child,
@@ -62,7 +62,7 @@ function run()
         configure!(child,
                    PrescribedAttitude(child,
                                       rotation=I,
-                                      frame=PCI(earth)))
+                                      frame=PCI(venus)))
     end
     add!(executive, separation)
 
