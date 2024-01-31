@@ -7,7 +7,7 @@ function run()
 
     integ = DP5(time)
 
-    executive = Executive(integ, stop_time=200)
+    executive = Executive(integ, stop_time=200 )
     
     venus = Europa(time)
 
@@ -24,7 +24,7 @@ function run()
                                   frame=PCI(venus)))
 
     set_position!(parent,
-                  planetodetic_altitude=100 * 10000,
+                  planetodetic_altitude=100 * 1000,
                   planetodetic_latitude=0,
                   longitude=0)
 
@@ -96,9 +96,9 @@ function run()
     # Time history setup
     time_history = TimeHistoryLoggingGroup(
         "t" => () -> dynamic_time(time),
-        "h_parent" => () -> planetodetic_altitude(parent),
-        "h_child1" => () -> planetodetic_altitude(child1),
-        "h_child2" => () -> planetodetic_altitude(child2))  # Logging altitude of child2
+        "Aeroshell" => () -> planetodetic_altitude(parent),
+        "Heat_shield" => () -> planetodetic_altitude(child1),
+        "Payload" => () -> planetodetic_altitude(child2))  # Logging altitude of child2
     add!(executive, time_history)
 
     # Running the simulation

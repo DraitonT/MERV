@@ -10,9 +10,9 @@ out = run()
 # Makes a dataframe from "out" dictionary
 time_history_data = DataFrame(
     t = out["t"],
-    h_parent = out["h_parent"],
-    h_child1 = out["h_child1"],
-    h_child2 = out["h_child2"]
+    h_parent = out["Aeroshell"],
+    h_child1 = out["Heat_shield"],
+    h_child2 = out["Payload"]
 )
 
 # Write the DataFrame to a CSV file
@@ -27,20 +27,20 @@ ax = Axis(f[1, 1],
 # Plot for the parent
 lines!(ax,
        out["t"],
-       out["h_parent"],
-       label=L"Parent")  # Using LaTeXStrings for LaTeX-like labels
+       out["Aeroshell"],
+       label=L"Aeroshell")  # Using LaTeXStrings for LaTeX-like labels
 
 # Plot for the first child
 lines!(ax,
        out["t"],
-       out["h_child1"],  # This should match the key for the first child's altitude
-       label=L"Child 1")  # Using LaTeXStrings for LaTeX-like labels
+       out["Heat_shield"],  # This should match the key for the first child's altitude
+       label=L"Heat_shield")  # Using LaTeXStrings for LaTeX-like labels
 
 # Plot for the second child
 lines!(ax,
        out["t"],
-       out["h_child2"],  # This should match the key for the second child's altitude
-       label=L"Child 2")  # Using LaTeXStrings for LaTeX-like labels
+       out["Payload"],  # This should match the key for the second child's altitude
+       label=L"Payload")  # Using LaTeXStrings for LaTeX-like labels
 
 # Add vertical lines for separation times
 vlines!(ax, [50], color=:black, linestyle=:dash, label=L"Separation Child 1")  # Separation of child 1 at 50 seconds
