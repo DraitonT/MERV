@@ -66,7 +66,7 @@ for i = 1:width(dataTable)
             Co_D = 2.2; % Drag coefficient
             
             % Calculate terminal velocity
-            v_terminal(j,i) = sqrt((2 * gravity * system_mass) / (rho_at_altitude * Co_D));
+            v_terminal(j,i) = (sqrt((2 * gravity * system_mass) / (rho_at_altitude * Co_D)))/1000;
         end
         
         % Plot results for the current altitude data
@@ -104,8 +104,19 @@ plot((dataTable.t * 100)/60,v_terminal(:,3))
 plot((dataTable.t * 100)/60,v_terminal(:,4)) 
 title('Terminal Velocity vs Time','Interpreter','latex')
 xlabel('Time (minutes)','Interpreter','latex');
-ylabel('Terminal velocity (m/s)','Interpreter','latex');
+ylabel('Terminal velocity (km/s)','Interpreter','latex');
 legend({'Aeroshell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
 grid on
 
+% Temperature at Altitude Plot
+figure;
+hold on
+plot((dataTable.t * 100)/60,temperature_at_altitude(:,2)) 
+plot((dataTable.t * 100)/60,temperature_at_altitude(:,3)) 
+plot((dataTable.t * 100)/60,temperature_at_altitude(:,4)) 
+title('Temperature vs Time','Interpreter','latex')
+xlabel('Time (minutes)','Interpreter','latex');
+ylabel('Temperature (K)','Interpreter','latex');
+legend({'Aeroshell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+grid on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DO NOT EDIT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
