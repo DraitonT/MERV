@@ -76,47 +76,69 @@ for i = 1:width(dataTable)
         xlabel('Time (minutes)','Interpreter','latex');
         ylabel('Altitude (km)','Interpreter','latex');
         ylim([0, max(altitude_data/1000)])
-        legend({'Aeroshell', 'Heatshield', 'Payload'}, 'Location', 'southeast');
+        legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast');
         grid on
         
         % Display the terminal velocity at the last calculated point
         fprintf('Terminal velocity for %s at %.2f s: %.2f m/s\n', varName, dataTable.t(end), v_terminal(end));
     end
+    xline((20 * 100)/60, 'k--', 'Label', 'Separation Child 1');
+    xline((50 * 100)/60, 'k--', 'Label', 'Separation Child 1');
 end
 
 % Pressure at Alitutde Plot
 figure;
 hold on
-plot((dataTable.t * 100)/60,pressure_at_altitude(:,2)) 
-plot((dataTable.t * 100)/60,pressure_at_altitude(:,3)) 
-plot((dataTable.t * 100)/60,pressure_at_altitude(:,4)) 
+plot((dataTable.t * 100)/60,pressure_at_altitude(:,2),'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,pressure_at_altitude(:,3),'LineWidth',2,'Color',[0, 0.5, 0]) 
+plot((dataTable.t * 100)/60,pressure_at_altitude(:,4),'LineWidth',2,'Color','red') 
 title('Pressure vs Time','Interpreter','latex')
 xlabel('Time (minutes)','Interpreter','latex');
 ylabel('Pressure (Pa)','Interpreter','latex');
-legend({'Aeroshell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
 grid on
+saveas(gcf, 'pressureVsAltitude.png');
+
+% Altitude vs Time Plot
+figure;
+hold on
+plot((dataTable.t * 100)/60,dataTable.h_parent/1000,'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,dataTable.h_child1/1000,'LineWidth',2,'Color',[0, 0.5, 0]) 
+plot((dataTable.t * 100)/60,dataTable.h_child2/1000,'LineWidth',2,'Color','red') 
+title('Altitude vs. Time','Interpreter','latex');
+xlabel('Time (minutes)','Interpreter','latex');
+ylabel('Altitude (km)','Interpreter','latex');
+legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+ylim([60,100])
+grid on
+xline((20 * 100)/60, 'k--', 'Label', 'Separation of Heatshield');
+xline((50 * 100)/60, 'k--', 'Label', 'Separation of Back shell');
+saveas(gcf, 'AltitudeVsTime.png');
 
 % Terminal Velocity at Altitude Plot
 figure;
 hold on
-plot((dataTable.t * 100)/60,v_terminal(:,2)) 
-plot((dataTable.t * 100)/60,v_terminal(:,3)) 
-plot((dataTable.t * 100)/60,v_terminal(:,4)) 
+plot((dataTable.t * 100)/60,v_terminal(:,2),'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,v_terminal(:,3),'LineWidth',2,'Color',[0, 0.5, 0]) 
+plot((dataTable.t * 100)/60,v_terminal(:,4),'LineWidth',2,'Color','red') 
 title('Terminal Velocity vs Time','Interpreter','latex')
 xlabel('Time (minutes)','Interpreter','latex');
 ylabel('Terminal velocity (km/s)','Interpreter','latex');
-legend({'Aeroshell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
 grid on
+saveas(gcf, 'velocityVsAltitude.png');
 
 % Temperature at Altitude Plot
 figure;
 hold on
-plot((dataTable.t * 100)/60,temperature_at_altitude(:,2)) 
-plot((dataTable.t * 100)/60,temperature_at_altitude(:,3)) 
-plot((dataTable.t * 100)/60,temperature_at_altitude(:,4)) 
+plot((dataTable.t * 100)/60,temperature_at_altitude(:,2),'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,temperature_at_altitude(:,3),'LineWidth',2,'Color',[0, 0.5, 0]) 
+plot((dataTable.t * 100)/60,temperature_at_altitude(:,4),'LineWidth',2,'Color','red') 
 title('Temperature vs Time','Interpreter','latex')
 xlabel('Time (minutes)','Interpreter','latex');
 ylabel('Temperature (K)','Interpreter','latex');
-legend({'Aeroshell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
 grid on
+saveas(gcf, 'temperatureVsAltitude.png');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DO NOT EDIT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
