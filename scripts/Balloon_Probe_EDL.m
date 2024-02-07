@@ -108,11 +108,11 @@ plot((dataTable.t * 100)/60,dataTable.h_child2/1000,'LineWidth',2,'Color','red')
 title('Altitude vs. Time','Interpreter','latex');
 xlabel('Time (minutes)','Interpreter','latex');
 ylabel('Altitude (km)','Interpreter','latex');
-legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
 ylim([60,100])
 grid on
-xline((20 * 100)/60, 'k--', 'Label', 'Separation of Heatshield');
+xline((5 * 100)/60, 'k--', 'Label', 'Separation of Heatshield');
 xline((50 * 100)/60, 'k--', 'Label', 'Separation of Back shell');
+legend({'Back shell', 'Heatshield', 'Payload', 'Sep (Heat shield)', 'Sep (Back shell)'}, 'Location', 'southeast','Interpreter','latex');
 saveas(gcf, 'AltitudeVsTime.png');
 
 % Terminal Velocity at Altitude Plot

@@ -52,7 +52,7 @@ function run()
 
     set_firing_command!(rocket1, true)
 
-    separation1 = TimeEvent(20) do
+    separation1 = TimeEvent(5) do
         @info "Separation of child1"
         detach!(child1)
         configure!(child1,
