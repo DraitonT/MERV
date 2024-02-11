@@ -18,11 +18,16 @@ spacecraft_mass = 3423; % [kg]
 system_mass = balloon_mass + spacecraft_mass; % [kg]
 
 % Venusian atmospheric properties
-gravity = 8.87; % [m/s^2] gravity on Venus
+gravity = 8.87; % [km/s^2] gravity on Venus
+R = 188.92; % Specific gas constant for CO2 in J/(kg*K)
 
 % Define the relative path to the CSV file
 relativePathToFile = '..\Genesis-v0.3.0\Project\multi_vehicle\';
 fileName = 'output.csv';
+
+% Inflation gas 
+density_gas = 2; % [kg/m^3] Hydrogen
+volume = 65; % [m^3] Volume of the balloon
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EDITABLE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -59,14 +64,19 @@ for i = 1:width(dataTable)
             temperature_at_altitude(j,i) = interp1(height_m, temperature_C, altitude_data(j), 'linear', 'extrap') + 273.15; % Convert to Kelvin
             
             % Calculate the atmospheric density using the Ideal Gas Law: p = rho * R * T
-            R = 188.92; % Specific gas constant for CO2 in J/(kg*K)
-            rho_at_altitude = pressure_at_altitude(j,i) / (R * temperature_at_altitude(j,i));
-            
+            rho_at_altitude(j,i) = pressure_at_altitude(j,i) / (R * temperature_at_altitude(j,i)); % [kg/m^3]
+    
+            % Calculating buoyancy force (Lifting capacity)
+            % Inflation rate of gas or system will make the volume dynamic
+            % based on the inflation rate and such
+            F_buoyancy(j,i) = rho_at_altitude(j,i) * volume * gravity; % [N]
+            F_gravity(j,i) = system_mass * gravity; % [N]
+
             % Calculate the drag coefficient (Placeholder value, replace with actual data)
-            Co_D = 2.2; % Drag coefficient
+            Co_D = 2.2; % [Unitless] Drag coefficient
             
             % Calculate terminal velocity
-            v_terminal(j,i) = (sqrt((2 * gravity * system_mass) / (rho_at_altitude * Co_D)))/1000;
+            v_terminal(j,i) = (sqrt((2 * gravity * system_mass) / (rho_at_altitude(j,i) * Co_D)))/1000; % [km/s] Terminal velocity
         end
         
         % Plot results for the current altitude data
@@ -141,4 +151,17 @@ legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpr
 grid on
 saveas(gcf, 'temperatureVsAltitude.png');
 
+% Buoyancy Force at Altitude Plot 
+figure;
+hold on
+plot((dataTable.t * 100)/60,F_buoyancy,'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,F_gravity,'LineWidth',2,'Color',[0, 0.5, 0]) 
+title('Temperature vs Time','Interpreter','latex')
+xlabel('Time (minutes)','Interpreter','latex');
+ylabel('Temperature (K)','Interpreter','latex');
+legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+grid on
+saveas(gcf, 'temperatureVsAltitude.png');
+
+grid on 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DO NOT EDIT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
