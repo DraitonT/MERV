@@ -12,6 +12,10 @@ clc, clear, close all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EDITABLE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Inflation gas 
+density_gas = 2; % [kg/m^3] Hydrogen
+volume = 650; % [m^3] Volume of the balloon
+
 % Inputs for the balloon probe system
 balloon_mass = 718.6953082; % [kg] mass of the balloon probe system
 spacecraft_mass = 3423; % [kg]
@@ -25,9 +29,8 @@ R = 188.92; % Specific gas constant for CO2 in J/(kg*K)
 relativePathToFile = '..\Genesis-v0.3.0\Project\multi_vehicle\';
 fileName = 'output.csv';
 
-% Inflation gas 
-density_gas = 2; % [kg/m^3] Hydrogen
-volume = 65; % [m^3] Volume of the balloon
+inflationRate = 10; % [m^3/s] Placeholder inflation rate
+inflationRateActual = (inflationRate * 100)/60;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EDITABLE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -50,6 +53,7 @@ pressure_atm = [92.10, 66.65, 47.39, 33.04, 22.52, 14.93, 9.851, 5.917, 3.501, 1
 % Convert heights to meters and pressures to Pascals (1 atm = 101325 Pa)
 height_m = height_km * 1000;
 pressure_Pa = pressure_atm * 101325;
+v_initial = 0; % [m^3] Initial volume of the balloon
 
 % Process each column in the table
 for i = 1:width(dataTable)
@@ -69,7 +73,15 @@ for i = 1:width(dataTable)
             % Calculating buoyancy force (Lifting capacity)
             % Inflation rate of gas or system will make the volume dynamic
             % based on the inflation rate and such
-            F_buoyancy(j,i) = rho_at_altitude(j,i) * volume * gravity; % [N]
+            volumeAtTime(j,i) = v_initial + (inflationRateActual * (dataTable.t(j) * 100)/60);
+            
+            % Check to see if the volumeAtTime is greater than the max
+            % possible volume for the balloon
+            if volumeAtTime(j,i) > volume
+                volumeAtTime(j,i) = volume;
+            end
+
+            F_buoyancy(j,i) = rho_at_altitude(j,i) * volumeAtTime(j,i) * gravity; % [N]
             F_gravity(j,i) = system_mass * gravity; % [N]
 
             % Calculate the drag coefficient (Placeholder value, replace with actual data)
@@ -154,12 +166,12 @@ saveas(gcf, 'temperatureVsAltitude.png');
 % Buoyancy Force at Altitude Plot 
 figure;
 hold on
-plot((dataTable.t * 100)/60,F_buoyancy,'LineWidth',2,'Color','blue') 
-plot((dataTable.t * 100)/60,F_gravity,'LineWidth',2,'Color',[0, 0.5, 0]) 
-title('Temperature vs Time','Interpreter','latex')
+plot((dataTable.t * 100)/60,F_buoyancy(:,4),'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,F_gravity(:,4),'LineWidth',2,'Color',[0, 0.5, 0]) 
+title('Buoyancy force vs Gravity Force (Over time)','Interpreter','latex')
 xlabel('Time (minutes)','Interpreter','latex');
-ylabel('Temperature (K)','Interpreter','latex');
-legend({'Back shell', 'Heatshield', 'Payload'}, 'Location', 'southeast','Interpreter','latex');
+ylabel('Force (N)','Interpreter','latex');
+legend({'Buoyancy Force','Gravitational Force'}, 'Location', 'southeast','Interpreter','latex');
 grid on
 saveas(gcf, 'temperatureVsAltitude.png');
 
