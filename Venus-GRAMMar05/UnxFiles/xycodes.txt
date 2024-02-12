@@ -1,0 +1,19 @@
+ Select x-code and y-code for plotable output versus desired parameter(s):
+
+ Code              Parameter
+ ----   ------------------------------------------------------------ 
+   1    Height (planetocentric, above reference ellipsoid, km)               
+   2    Radius (planetocentric radius = planet radius + height, km)
+   3    Latitude (deg.)                                  
+   4    Longitude (deg.) East if LonEast=1; West if LonEast=0 
+   5    Time from start (seconds: ERT/VET/UTC/TT per input)
+   6    Time from start (Venus days)
+   7    Planetocentric longitude of Sun (Ls, degrees)
+   8    Local true solar time (Venus hours = 1/24th Titan day)
+   9    Pressure (mb)                                         
+  10    Pressure Height [-log(Pres/PresSurf) = -log(sigma)]   
+  11    Sigma coordinate [sigma=Pressure/(Surface Pressure)]
+  12    Solar zenith angle (degrees)
+  13    Longitude in range -180 to +180 (East or West, controlled by LonEast)
+
+ Use y-code = 0 for plotable output vs x-code variable only.

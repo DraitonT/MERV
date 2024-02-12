@@ -1,0 +1,35 @@
+                     History of Venus-GRAM Program Versions
+                
+ 
+Vers  Date                        Comments
+____  _____  __________________________________________________________
+ 
+Beta  03/04  First release for Aerocapture Systems Analysis Team.
+Vers         Dependence of mean atmospheric parameters on height, 
+  0 	     latitude, and time-of-day (or solar zenith angle) is based 
+             on Kliore, A. J., V. I. Moroz, and G. M. Keating (1986), 
+             "The Venus International Reference Atmosphere", Advances 
+             in Space Research, vol. 5, no. 11, 1985, pages 1-304, 
+             Pergamon Press, Oxford, referred to in comments within 
+             the program code as VIRA. To facilitate comparisons with
+             Venus probe data (Veneras, Pioneers, Vegas), a new feature
+             was added to output temperature +/- 1-sigma, and perturbed 
+             temperature on the TPresHgt.txt file.
+
+------------------------------------------------------------------------------
+
+2005  03/05  Added option to substitute auxiliary input profile of 
+Vers         thermodynamic and/or wind data for VIRA climatology, within 
+  1          user-specified region. Use of this option is controlled by 
+             (optional) input profile file name and parameters profnear 
+             and proffar.  Converted to option for long file names for 
+             LIST, OUTPUT, TRAJECTORY files, etc. (up to character*60).  
+             In order for users implementing multiple atmospheric models 
+             into one trajectory code to avoid duplication of names for 
+             source code files, subroutines, functions, and common blocks, 
+             suffix '_V05' was appended to all these names.  No suffix 
+             was appended in source code for auxiliary programs (e.g.
+             finddate.f).  Modified routine to automatically generate 
+             random seed numbers.  Added time effect on perturbation model
+             correlation.
+

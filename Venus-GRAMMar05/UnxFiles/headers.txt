@@ -1,0 +1,95 @@
+                    Explanation of Output File Headers
+
+Headers for Unit 21 'Density.txt'  are -
+
+ Var_X    = user-selected plot variable (determined by NVARX value)
+ Var_Y    = (Optional) user-selected plot variable (from NVARY value)
+ DENSLO   =  low (average -1 sigma) density
+ DENSAV   =  average density (from VIRA model dependence on height, latitude,
+              and time-of-day or solar zenith angle)
+ DENSHI   =  high (average +1 sigma) density                          
+ DENSTOT  =  total (average+perturbed) density (units kg/m**3), log-10 scale,
+              % from Venus avg, or kg/km**3, depending on value of LOGSCALE
+ Radius   =  Radial distance (km), planetary center of mass to spacecraft
+              position (planet radius plus height)
+ Rref     =  local planetary radius (km)
+ Grav     =  local acceleration of gravity (m/s**2)           
+ LOGSCALE =  option controlling units of density output
+ profwgt  =  Weight factor for auxiliary input profile data 
+
+Headers for Unit 22 'Perturb.txt'  are -
+
+ Var_X    = user-selected plot variable (determined by NVARX value)
+ Var_Y    = (Optional) user-selected plot variable (from NVARY value)
+ SigD     = Density standard deviation (% of unperturbed mean) 
+ DensRand = Random density perturbation (% of unperturbed mean)    
+ corlim   = Ratio of step size to correlation accuracy limit (ideally
+            should be 1.0 or larger)           
+ SigU     = Standard deviation for eastward wind perturbations (m/s)
+ SigV     = Standard deviation for northward wind perturbations (m/s)
+ iupdate  = 1 if perturbations updated, 0 if perturbations not updated but
+            perturbation step updated, -1 if neither perturbations nor
+            total step updated
+ Tlow     = Mean minus 1-sigma temperature (K)
+ Tavg     = Mean temperature (K)
+ Thigh    = Mean plus 1-sigma temperature (K)
+ Tpert    = perturbed temperature (K)
+
+Headers for Unit 23 'Winds.txt'    are -       
+
+ Var_X    = user-selected plot variable (determined by NVARX value)
+ Var_Y    = (Optional) user-selected plot variable (from NVARY value)
+ EWmean   = mean eastward wind component (m/s)             
+ EWpert   = perturbation in eastward wind component (m/s)      
+ EWtot    = total (mean + perturbed) eastward wind (m/s)       
+ NSmean   = mean northward wind component (m/s)               
+ NSpert   = perturbation in northward wind component (m/s)    
+ NStot    = total (mean + perturbed) northward wind (m/s)
+ iupdate  = 1 if perturbations updated, 0 if perturbations not updated but
+            perturbation step updated, -1 if neither perturbations nor
+            total step updated
+
+Headers for Unit 24 'TPresHgt.txt' are -
+
+ Var_X    = user-selected plot variable (determined by NVARX value)
+ Var_Y    = (Optional) user-selected plot variable (from NVARY value)
+ Temp     = Mean temperature (K)                              
+ Pres     = Mean pressure (N/m**2, log-10, or % from Venus mean)                           
+ TdegC    = Mean temperature (degrees C)                 
+ Pres_mb  = Mean pressure (mb)             
+ Hrho     = Density scale height (km)                        
+ Hpres    = Pressure scale height (km)                       
+ MolWt    = molecular weight (kg/kg-mole)
+ CO2%v    = mole fraction (%) Carbon Dioxide concentration (% by volume)
+ N2%v     = mole fraction (%) Nitrogen concentration (% by volume)
+ O%v      = mole fraction (%) Atomic Oxygen concentration (% by volume)
+ CO%v     = mole fraction (%) Carbon Monoxide concentration (% by volume)
+ He%v     = mole fraction (%) Helium concentration (% by volume)
+ N%v      = mole fraction (%) Atomic Nitrogen concentration (% by volume)
+ H%v      = mole fraction (%) Atomic Hydrogen concentration (% by volume)
+ LOGSCALE = option controlling units of pressure output
+
+Headers for Unit 25 'OUTPUT.txt'   are -
+
+ Time     = Time (sec) from start time
+ Height   = height (km) above reference ellipsoid, or total radius to
+            spacecraft (km) if input plot options NVARX=2 or NVARY=2
+ Lat      = latitude (deg.)                                      
+ LonE or LonW = East (or West) longitude, as controlled by input value
+                 of LonEast
+ Denkgm3  = Mean density (kg/m**3) OR "Logkgm3" for Log10(kg/m**3) OR
+             "Den%VenA" for %deviation from Venus avg., OR "Denkgkm3"
+             for kg/km**3, depending on input value of LOGSCALE
+ Temp     = Mean temperature (K)
+ EWind    = Mean Eastward wind component (m/s)                 
+ NWind    = Mean Northward wind component (m/s)
+ sigD     = std. dev. for density perturbations (% of mean)
+ Ls       = Planetocentric longitude of Sun (degrees)
+ SZA      = Solar zenith angle (degrees)
+ CO2%m    = Carbon Dioxide mass concentration (% by mass)
+ N2%m     = Nitrogen mass concentration (% by mass)
+ O%m      = Atomic Oxygen mass concentration (% by mass)
+ CO%m     = Carbon Monoxide mass concentration (% by mass)
+ He%m     = Helium mass concentration (% by mass)
+ N%m      = Atomic Nitrogen mass concentration (% by mass)
+ H%m      = Atomic Hydrogen mass concentration (% by mass)
