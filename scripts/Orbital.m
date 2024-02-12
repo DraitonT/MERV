@@ -755,6 +755,8 @@ function [DV_dep, DV_arr, transferTime] = interplantarySolver2(departurePlanet, 
                 tSyn = 2*pi/ (nDepature - n);                   
                 vDWRTDeparture = abs(vD - sqrt(muSun / departurePlanet.semiMajor));                                                                    %[km/s] | Velocity of S/C departure WRT to the depature planet
                 vAWRTTarget = abs(vA - sqrt(muSun / targetPlanet.semiMajor));                                                                          %[km/s] | Velocity of S/C arrival WRT to the arrival planet
+                transferTime =(pi / sqrt(muSun)) * ((targetPlanet.semiMajor + departurePlanet.semiMajor)/2)^(3/2); %[sec] | Transfer time of the Hohmann transfer
+          
             %% 2.2 Departure Parking Orbit
                 departureParkingOrbitPer = z_parking_per_dep + departurePlanet.R;   %[km] | Radius of departure periapsis parking orbit to S/C                                                                                                   
                 depatureParkingOrbitApo = z_parking_apo_dep + departurePlanet.R;    %[km] | Radius of arrival apopapsis parking orbit to S/C
