@@ -17,7 +17,7 @@ time_history_data = DataFrame(
 )
 
 # Write the DataFrame to a CSV file
-CSV.write("output.csv", time_history_data)
+CSV.write("Genesis-v0.3.0\\Project\\multi_vehicle\\output.csv", time_history_data)
 
 f = Figure()
 
