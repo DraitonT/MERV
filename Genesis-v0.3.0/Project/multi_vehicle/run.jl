@@ -16,7 +16,7 @@ time_history_data = DataFrame(
 )
 
 # Write the DataFrame to a CSV file
-CSV.write("M:\\dev\\MATLAB\\ARO 4811L\\Genesis-v0.3.0\\Project\\multi_vehicle\\output.csv", time_history_data)
+CSV.write("output.csv", time_history_data)
 
 f = Figure()
 

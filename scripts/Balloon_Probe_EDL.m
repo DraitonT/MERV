@@ -177,6 +177,19 @@ saveas(gcf, 'temperatureVsAltitude.png');
 
 grid on 
 
+% Altitude vs. Velocity
+figure;
+hold on
+plot(v_terminal(:,4), dataTable.h_child2/1000,'LineWidth',2,'Color','blue') 
+title('Altitude vs Velocity','Interpreter','latex')
+xlabel('Velocity (km/s)','Interpreter','latex');
+ylabel('Altitude (km)','Interpreter','latex');
+% legend({'Buoyancy Force','Gravitational Force'}, 'Location', 'southeast','Interpreter','latex');
+grid on
+saveas(gcf, 'velocityVsAltitude.png');
+
+grid on
+
 %% Saving all the new data to a CSV with the altitude and time values
 % After all calculations are done, create a table with the generated data
 resultsTable = table(dataTable.t, altitude_data, pressure_at_altitude, temperature_at_altitude, v_terminal, F_buoyancy, F_gravity, ... % Add other arrays as needed
