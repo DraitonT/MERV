@@ -32,6 +32,13 @@ fileName = 'output.csv';
 inflationRate = 10; % [m^3/s] Placeholder inflation rate
 inflationRateActual = (inflationRate * 100)/60;
 
+%% Venus Scale Height Givens 
+ g_Venus = 8.87; % [m/s^2] Gravity on surface of Venus
+ M_Venus = 0.04401; % [kg/mol] Molar mass of The Venusian atmosphere, mainly CO2
+ R_Venus = 8.314; % JK/(Mol*K) Universal gas constant - Venus
+ S_Venus = R_Venus/M_Venus; % Specific gas constant - Venus
+ T_Venus = 737; % [K] Venus surface temperature
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EDITABLE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DO NOT EDIT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +76,8 @@ for i = 1:width(dataTable)
             
             % Calculate the atmospheric density using the Ideal Gas Law: p = rho * R * T
             rho_at_altitude(j,i) = pressure_at_altitude(j,i) / (R * temperature_at_altitude(j,i)); % [kg/m^3]
-    
+            H_Venus(j,i) = (S_Venus * temperature_at_altitude(j,i))/(g_Venus); % [m] Scale height (Equation 12.55, pg. 545)
+
             % Calculating buoyancy force (Lifting capacity)
             % Inflation rate of gas or system will make the volume dynamic
             % based on the inflation rate and such
@@ -193,6 +201,18 @@ grid on
 saveas(gcf, 'velocityVsAltitude.png');
 
 grid on
+
+% Scale Height at Altitude Plot 
+figure;
+hold on
+plot((dataTable.t * 100)/60,H_Venus(:,4),'LineWidth',2,'Color','blue') 
+plot((dataTable.t * 100)/60,H_Venus(:,4),'LineWidth',2,'Color',[0, 0.5, 0]) 
+title('Scale Height vs Altitude (Over time)','Interpreter','latex')
+xlabel('Time (minutes)','Interpreter','latex');
+ylabel('Scale height (km)','Interpreter','latex');
+% legend({'Scale Height','Gravitational Force'}, 'Location', 'southeast','Interpreter','latex');
+grid on
+saveas(gcf, 'ScaleHeightVsAltitude.png');
 
 %% Saving all the new data to a CSV with the altitude and time values
 % After all calculations are done, create a table with the generated data
