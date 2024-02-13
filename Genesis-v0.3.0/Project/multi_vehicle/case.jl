@@ -52,7 +52,7 @@ function run()
 
     set_firing_command!(rocket1, true)
 
-    separation1 = TimeEvent(5) do
+    separation1 = TimeEvent(50) do
         @info "Separation of child1"
         detach!(child1)
         configure!(child1,
@@ -83,7 +83,7 @@ function run()
     set_firing_command!(rocket2, true)  # Assuming we want to fire child2's rocket immediately as well
 
     # Separation event for the second child
-    separation2 = TimeEvent(50) do
+    separation2 = TimeEvent(100) do
         @info "Separation of child2"
         detach!(child2)
         configure!(child2,
@@ -93,12 +93,44 @@ function run()
     end
     add!(executive, separation2)
 
+     # Additional child setup 3
+     child3 = Vehicle(venus)
+     add!(executive, child3)
+ 
+     set_mass_properties!(child3, mass=500)  # Set the mass for child3
+ 
+     attach!(child3, parent=parent)
+ 
+     # Adding a rocket to child3 just like child1
+     tank2 = PointMassTank(child3, propellant_mass=900)  # Assuming same mass as child1's tank
+ 
+     rocket2 = MonoPropellantRocket(child3,
+                                    vacuum_thrust=10000,  # Assuming same thrust as child1's rocket
+                                    specific_impulse=300,  # Assuming same specific impulse as child1's rocket
+                                    thrust_direction=[1, 0, 0],  # Assuming same thrust direction as child1's rocket
+                                    thrust_frame=Structure(child3),
+                                    propellant_source=tank2)
+ 
+     set_firing_command!(rocket2, true)  # Assuming we want to fire child3's rocket immediately as well
+ 
+     # Separation event for the third child
+     separation3 = TimeEvent(120) do
+         @info "Separation of child3"
+         detach!(child3)
+         configure!(child3,
+                    PrescribedAttitude(child3,
+                                       rotation=I,
+                                       frame=PCI(venus)))
+     end
+     add!(executive, separation3)
+
     # Time history setup
     time_history = TimeHistoryLoggingGroup(
         "t" => () -> dynamic_time(time),
         "Aeroshell" => () -> planetodetic_altitude(parent),
         "Heat_shield" => () -> planetodetic_altitude(child1),
-        "Payload" => () -> planetodetic_altitude(child2))  # Logging altitude of child2
+        "Payload" => () -> planetodetic_altitude(child2), # Logging altitude of child2
+        "Chute" => () -> planetodetic_altitude(child3))  # Logging altitude of child3
     add!(executive, time_history)
 
     # Running the simulation
