@@ -214,6 +214,45 @@ ylabel('Scale height (km)','Interpreter','latex');
 grid on
 saveas(gcf, 'ScaleHeightVsAltitude.png');
 
+%% Orbital Elements to RVs 
+mu = 324859; % [km^3/s^2]
+
+[r_I, v_I] = coe2rv(dataTable.Eccentricity, dataTable.Semimajor, dataTable.inclination, dataTable.AOP, dataTable.RAAN, dataTable.trueAnomaly, mu);
+%% Plot Orbit 
+figure;
+r_I = r_I/1000;
+v_I = v_I/1000;
+% Define the radius of the Earth (in kilometers)
+venusRadius = 6052; % Approximate radius of the VenusTexture = imread(earthTextureImage); % Load your own Venus texture image
+
+venusTextureImage = append(pwd, '\..\data\venusTexture.jpg');
+venusTexture = imread(venusTextureImage); % Load your own Venus texture image
+venusTexture = flipud(venusTexture);
+
+% Create a sphere for Earth
+[xVenus, yVenus, zVenus] = sphere;
+xVenus = xVenus * venusRadius;
+yVenus = yVenus * venusRadius;
+zVenus = zVenus * venusRadius;
+
+plot3(r_I(:,1), r_I(:,2), r_I(:,3), 'b');
+xlabel('X (km)', 'FontWeight','bold','Color','w');
+ylabel('Y (km)', 'FontWeight','bold','Color','w');
+zlabel('Z (km)', 'FontWeight','bold','Color','w');
+title('Satellite Circular Orbit', 'FontWeight','bold','Color','w');
+grid on;
+axis equal;
+set(gca,'Color',[0,0,0])
+set(gcf,'Color',[0,0,0])
+hold on
+surf(xVenus, yVenus, zVenus, 'CData', venusTexture, 'FaceColor', 'texturemap', 'EdgeColor', 'none');
+axis equal;
+xlabel('X (km)');
+ylabel('Y (km)');
+zlabel('Z (km)');
+grid on
+title(sprintf('Orbit Visualization'));
+
 %% Saving all the new data to a CSV with the altitude and time values
 % After all calculations are done, create a table with the generated data
 resultsTable = table(dataTable.t, altitude_data, pressure_at_altitude, temperature_at_altitude, v_terminal, F_buoyancy, F_gravity, ... % Add other arrays as needed
@@ -227,5 +266,57 @@ newFullPath = fullfile(relativePathToFile, newFileName);
 writetable(resultsTable, newFullPath);
 
 fprintf('Data saved to %s\n', newFullPath);
+
+function [r_I, v_I] = coe2rv(e, a, i, w, Om, TA, mu)
+    % Ensure inputs are column vectors for consistent dimensions
+    if isrow(e); e = e'; end
+    if isrow(a); a = a'; end
+    if isrow(i); i = i'; end
+    if isrow(w); w = w'; end
+    if isrow(Om); Om = Om'; end
+    if isrow(TA); TA = TA'; end
+    if isrow(mu); mu = mu'; end
+    
+    % Calculate the specific angular momentum for each set of elements
+    h = sqrt(a .* mu .* (1 - e.^2));
+    
+    % Calculate the magnitude of the radius vector
+    norm_r = h.^2 ./ mu ./ (1 + e .* cosd(TA));
+    
+    % Position vector in the perifocal frame
+    r_PF = [norm_r .* cosd(TA), norm_r .* sind(TA), zeros(size(norm_r))];
+    
+    % Velocity vector in the perifocal frame
+    v_PF = [mu ./ h .* (-sind(TA)), mu ./ h .* (e + cosd(TA)), zeros(size(norm_r))];
+    
+    % Preallocate arrays for the output
+    r_I = zeros(size(r_PF));
+    v_I = zeros(size(v_PF));
+    
+    % Loop through each set of elements to apply the rotation
+    for k = 1:size(e, 1)
+        % Rotation matrix from the inertial frame to the frame defined by the
+        % longitude of ascending node (Om)
+        R_O = [cosd(Om(k)) sind(Om(k)) 0; -sind(Om(k)) cosd(Om(k)) 0; 0 0 1];
+        
+        % Rotation matrix from the frame defined by Om to the frame defined by
+        % the inclination (i)
+        R_i = [1 0 0; 0 cosd(i(k)) sind(i(k)); 0 -sind(i(k)) cosd(i(k))];
+        
+        % Rotation matrix from the frame defined by the inclination to the
+        % perifocal frame, which is defined by the argument of periapsis (w)
+        R_w = [cosd(w(k)) sind(w(k)) 0; -sind(w(k)) cosd(w(k)) 0; 0 0 1];
+        
+        % Combined rotation matrix from the perifocal frame to the inertial frame
+        R_PI = R_w * R_i * R_O;
+        
+        % Convert position and velocity vectors from the perifocal frame to the
+        % inertial frame for each set
+        r_I(k, :) = (R_PI' * r_PF(k, :)')';
+        v_I(k, :) = (R_PI' * v_PF(k, :)')';
+    end
+end
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DO NOT EDIT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
