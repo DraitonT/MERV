@@ -9,7 +9,7 @@ function run()
 
     executive = Executive(integ, stop_time=200 )
     
-    venus = Earth(time)
+    venus = Europa(time)
 
     parent = Vehicle(venus)
     add!(executive, parent)
@@ -123,6 +123,7 @@ function run()
                                        frame=PCI(venus)))
      end
      add!(executive, separation3)
+     planetodetic_altitude(child2)
 
     # Time history setup
     time_history = TimeHistoryLoggingGroup(
@@ -131,12 +132,12 @@ function run()
         "Heat_shield" => () -> planetodetic_altitude(child1),
         "Payload" => () -> planetodetic_altitude(child2), # Logging altitude of child2
         "Chute" => () -> planetodetic_altitude(child3),  # Logging altitude of child3
-        "Semimajor" => () -> semi_major_axis(child2),
-        "Eccentricity" => () -> eccentricity(child2),
-        "inclination" => () -> inclination(child2), # Logging altitude of child2
-        "RAAN" => () -> longitude_of_ascending_node(child2),
-        "AOP" => () -> argument_of_periapsis(child2),
-        "trueAnomaly" => () -> true_anomaly(child2))  # Logging altitude of child3
+        "Semimajor" => () -> semi_major_axis(parent),
+        "Eccentricity" => () -> eccentricity(parent),
+        "inclination" => () -> inclination(parent), # Logging altitude of child2
+        "RAAN" => () -> longitude_of_ascending_node(parent),
+        "AOP" => () -> argument_of_periapsis(parent),
+        "trueAnomaly" => () -> true_anomaly(parent))  # Logging altitude of child3
     add!(executive, time_history)
 
     # Running the simulation

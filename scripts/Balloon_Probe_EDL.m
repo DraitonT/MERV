@@ -216,7 +216,8 @@ saveas(gcf, 'ScaleHeightVsAltitude.png');
 
 %% Orbital Elements to RVs 
 mu = 324859; % [km^3/s^2]
-
+dataTable.Semimajor = dataTable.Semimajor + 6052 * 1000;
+% [r_I, v_I] = coe2rv(e, a, i, w, Om, TA, mu)
 [r_I, v_I] = coe2rv(dataTable.Eccentricity, dataTable.Semimajor, dataTable.inclination, dataTable.AOP, dataTable.RAAN, dataTable.trueAnomaly, mu);
 %% Plot Orbit 
 figure;
