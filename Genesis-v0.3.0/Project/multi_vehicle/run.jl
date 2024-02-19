@@ -3,7 +3,7 @@ using LaTeXStrings
 using CSV
 using DataFrames 
 
-include("caseCOE.jl")
+include("case.jl")
 
 out = run()
 
@@ -14,12 +14,6 @@ time_history_data = DataFrame(
     h_child1 = out["Heat_shield"],
     h_child2 = out["Payload"],
     h_child3 = out["Chute"],
-    Semimajor = out["Semimajor"],
-    Eccentricity = out["Eccentricity"],
-    inclination = out["inclination"],
-    RAAN = out["RAAN"],
-    AOP = out["AOP"],
-    trueAnomaly = out["trueAnomaly"]
 )
 
 # Write the DataFrame to a CSV file

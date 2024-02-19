@@ -52,7 +52,7 @@ function run()
 
     set_firing_command!(rocket1, true)
 
-    separation1 = TimeEvent(50) do
+    separation1 = TimeEvent(5) do
         @info "Separation of child1"
         detach!(child1)
         configure!(child1,
@@ -83,7 +83,7 @@ function run()
     set_firing_command!(rocket2, true)  # Assuming we want to fire child2's rocket immediately as well
 
     # Separation event for the second child
-    separation2 = TimeEvent(100) do
+    separation2 = TimeEvent(50) do
         @info "Separation of child2"
         detach!(child2)
         configure!(child2,
@@ -114,7 +114,7 @@ function run()
      set_firing_command!(rocket2, true)  # Assuming we want to fire child3's rocket immediately as well
  
      # Separation event for the third child
-     separation3 = TimeEvent(120) do
+     separation3 = TimeEvent(80) do
          @info "Separation of child3"
          detach!(child3)
          configure!(child3,

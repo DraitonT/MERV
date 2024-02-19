@@ -123,8 +123,8 @@ function run()
                                        frame=PCI(venus)))
      end
      add!(executive, separation3)
-     planetodetic_altitude(child2)
-
+     semi_major_axis(parent)
+     planetodetic_altitude(parent)
     # Time history setup
     time_history = TimeHistoryLoggingGroup(
         "t" => () -> dynamic_time(time),
