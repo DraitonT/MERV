@@ -140,6 +140,7 @@ for i = 1:width(dataTable)
     xline((50 * 100)/60, 'k--', 'Label', 'Separation Child 1');
 end
 
+P = abs(P);
 % Pressure at Alitutde Plot
 figure;
 hold on
@@ -210,6 +211,7 @@ xlabel('Time (minutes)','Interpreter','latex');
 ylabel('Force (N)','Interpreter','latex');
 legend({'Buoyancy Force','Gravitational Force'}, 'Location', 'southeast','Interpreter','latex');
 ylim([0, 1E5])
+xlim([0,150])
 grid on
 saveas(gcf, 'buoyancyVsTime.png');
 
@@ -262,9 +264,20 @@ title('Density vs Altitude (Over time)','Interpreter','latex')
 xlabel('Density (kg/m^3)','Interpreter','latex');
 ylabel('Altitude (km)','Interpreter','latex');
 ylim([40,100])
-% legend({'Density','Gravitational Force'}, 'Location', 'southeast','Interpreter','latex');
 grid on
 saveas(gcf, 'DensityVsAltitude.png');
+
+%% Snatch Force
+figure;
+hold on
+plot((dataTable.t * 100)/60, P(:,2), 'LineWidth',2,'Color','blue') 
+title('Snatch force vs. Time','Interpreter','latex')
+xlabel('Time (minutes)','Interpreter','latex');
+ylabel('Snatch Force (N)','Interpreter','latex');
+grid on
+saveas(gcf, 'Snatch Force vs. Time.png');
+
+
 % %% Orbital Elements to RVs 
 % mu = 324859; % [km^3/s^2]
 % dataTable.Semimajor = dataTable.Semimajor + 6052 * 1000;
