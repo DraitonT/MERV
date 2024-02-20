@@ -19,7 +19,7 @@ volume = 650; % [m^3] Volume of the balloon
 % Inputs for the balloon probe system
 balloon_mass = 718.6953082; % [kg] mass of the balloon probe system
 spacecraft_mass = 3423; % [kg]
-system_mass = balloon_mass + spacecraft_mass; % [kg]
+system_mass = 3901.24; % [kg]
 
 % Venusian atmospheric properties
 R = 188.92; % Specific gas constant for CO2 in J/(kg*K)
@@ -106,7 +106,7 @@ for i = 1:width(dataTable)
 
             % Assuming the parachute is a hemisphere (common for parachute shapes)
             % Calculate the radius of a hemisphere with area A
-            r(j,i) = sqrt(A(j,i) / (2 * pi));
+            r(j,i) = sqrt(A(j,i) / (2 * pi)); 
 
             % Calculate the volume of the hemisphere (How much air is trapped beneath
             % the parachute
@@ -119,7 +119,7 @@ for i = 1:width(dataTable)
             AKE(j,i) = 0.5 * m_p * (2 * Vp1 * delta_V(j,i) + delta_V(j,i)^2); % Equation 2 from the paper
 
             % Calculate snatch force P using the derived equation (3)
-            A = pi * (r(j,i))^2; % Total cross-sectional area of suspension lines (based on parachute radius)
+            A = 113.32; % [m^2] Total cross-sectional area of suspension lines (based on parachute radius) 
             P(j,i) = 2 * AKE(j,i) / delta_e; % Snatch force equation
         end
         
@@ -230,6 +230,7 @@ saveas(gcf, 'velocityVsAltitude.png');
 
 grid on
 
+%%
 % Scale Height at Altitude Plot 
 figure;
 hold on;
@@ -255,7 +256,7 @@ grid on;
 % Save the figure
 saveas(gcf, 'ScaleHeightVsAltitude_Time.png');
 
-
+%% m
 %% Density
 figure;
 hold on
