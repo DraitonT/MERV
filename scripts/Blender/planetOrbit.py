@@ -64,12 +64,48 @@ def create_satellite(name, radius, location):
     bpy.ops.object.shade_smooth()  # Set smooth shading
     return satellite
 
-# Function to propagatet the orbit
+# Function to create a marker at the specified location
+def create_marker(name, position, marker_color):
+    # Create a sphere at the given position
+    bpy.ops.mesh.primitive_uv_sphere_add(location=position, radius=0.1)  # Adjust radius as needed
+    marker = bpy.context.object
+    marker.name = name
+    
+    # Create a new material with the given color
+    mat = bpy.data.materials.new(name=name + "_Material")
+    mat.diffuse_color = marker_color + (1,)  # RGBA, A needs to be 1 for full opacity
+    marker.data.materials.append(mat)
+
 def animate_orbit(planet, positions, frame_start, frame_end):
+    # Create a new curve
+    bpy.ops.curve.primitive_nurbs_path_add()
+    curve = bpy.context.object
+    curve.name = planet.name + "_Orbit"
+    
+    # Switch to 'EDIT' mode to modify the curve
+    bpy.ops.object.mode_set(mode='EDIT')
+    
+    # Get the curve's spline to add points to
+    spline = curve.data.splines[0]
+    spline.type = 'POLY'  # Changing the spline type to 'POLY'
+    spline.points.add(len(positions) - 1)  # Adding the necessary number of points
+
+    # Add the positions to the spline points
+    for i, position in enumerate(positions):
+        spline.points[i].co = (position[0], position[1], position[2], 1)
+
+    # Switch back to 'OBJECT' mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+    
+    # Animate the planet along the path
     for i, position in enumerate(positions):
         frame = frame_start + i * ((frame_end - frame_start) / len(positions))
         planet.location = position
         planet.keyframe_insert(data_path="location", frame=frame)
+    
+    # Create markers for start and end positions
+    create_marker(planet.name + "_Start", positions[0], marker_color=(1, 0, 0))
+    create_marker(planet.name + "_End", positions[-1], marker_color=(0, 1, 0))
 
 # Function to import an STL file and scale it
 def import_stl(filepath, object_name, scale_factor):
@@ -81,11 +117,11 @@ def import_stl(filepath, object_name, scale_factor):
     return imported_object
 
 # Function to set up the space background
-def setup_space_background():
+def setup_background(backgroundFilePath):
     # Use an environment texture for the world background
     bpy.context.scene.world.use_nodes = True
     bg = bpy.context.scene.world.node_tree.nodes.new('ShaderNodeTexEnvironment')
-    bg.image = bpy.data.images.load(os.path.join(script_dir, '..', '..', 'data', 'Textures', 'Space_background.jpg'))  # Update the path to your space background image
+    bg.image = bpy.data.images.load(backgroundFilePath)  # Update the path to your space background image
     bg.location = -300, 0
     output = bpy.context.scene.world.node_tree.nodes.get('World Output')
     bpy.context.scene.world.node_tree.links.new(bg.outputs['Color'], output.inputs['Surface'])
@@ -116,6 +152,44 @@ def setup_follow_camera(target_object, radius, location=(0, 0, 10)):
     
     # Set the camera as the active camera for the scene
     bpy.context.scene.camera = camera
+
+# Function to create a sun lamp
+def create_sun(location, strength=5, sun_color=(1, 1, 1)):
+    bpy.ops.object.light_add(type='SUN', location=location)
+    sun = bpy.context.active_object
+    sun.data.energy = strength
+    sun.data.color = sun_color
+    return sun
+
+# Function to keyframe the visibility of an object
+def keyframe_visibility(obj, start_frame, end_frame, is_visible):
+    # Hide the object in the viewport
+    obj.hide_viewport = not is_visible
+    obj.keyframe_insert(data_path="hide_viewport", frame=start_frame - 1)
+    obj.hide_viewport = is_visible
+    obj.keyframe_insert(data_path="hide_viewport", frame=start_frame)
+    
+    # Hide the object in the render
+    obj.hide_render = not is_visible
+    obj.keyframe_insert(data_path="hide_render", frame=start_frame - 1)
+    obj.hide_render = is_visible
+    obj.keyframe_insert(data_path="hide_render", frame=start_frame)
+
+    # Keyframe the end of the visibility transition
+    obj.hide_viewport = not is_visible
+    obj.keyframe_insert(data_path="hide_viewport", frame=end_frame)
+    obj.hide_render = not is_visible
+    obj.keyframe_insert(data_path="hide_render", frame=end_frame)
+
+# Function to animate the camera's location
+def animate_camera_location(camera, start_location, end_location, start_frame, end_frame):
+    camera.location = start_location
+    camera.keyframe_insert(data_path="location", frame=start_frame)
+    camera.location = end_location
+    camera.keyframe_insert(data_path="location", frame=end_frame)
+
+# Set the end frame for the animation
+bpy.context.scene.frame_end = 750
 
 # Clear existing objects in the scene
 bpy.ops.object.select_all(action='SELECT')
@@ -189,9 +263,6 @@ satellite = create_satellite('Satellite', radius=satellite_radius, location=sate
 # Animate the satellite's orbit using the loaded positions
 animate_orbit(satellite, transfer_positions, frame_start=1, frame_end=250)
 
-# Set the end frame for the animation
-bpy.context.scene.frame_end = 250
-
 # Build paths to the STL files for the satellite components
 aeroshell_path = os.path.join(script_dir, '..', '..', 'Models', 'Aeroshell - Aeroshell-1.STL')
 heatshield_path = os.path.join(script_dir, '..', '..', 'Models', 'Aeroshell - Heatshield-2.STL')
@@ -210,11 +281,34 @@ heatshield.location = satellite_location
 # aeroshell.parent = satellite
 # heatshield.parent = satellite
 
-# Apply the same animation to the satellite components
+# Apply the same animation to the satellite components  
 animate_orbit(aeroshell, transfer_positions, frame_start=1, frame_end=250)
 animate_orbit(heatshield, transfer_positions, frame_start=1, frame_end=250)
 
-setup_space_background()
+backgroundFilePath = os.path.join(script_dir, '..', '..', 'data', 'Textures', 'Space_background.jpg')
+
+setup_background(backgroundFilePath)
 
 # Set up the follow camera to track the aeroshell
 setup_follow_camera(aeroshell, radius=10)  # 'radius' is the distance from the target object
+
+# Create the sun lamp
+sun_location = (100, 100, 100)  # Position the sun lamp at a suitable location
+sun_strength = 5  # Adjust the strength as needed
+sun_color = (1, 1, 0.95)  # Sunlight color can be slightly yellow
+sun = create_sun(sun_location, strength=sun_strength, sun_color=sun_color) 
+
+# (obj, start_frame, end_frame, is_visible)
+scene1_start_frame = 1
+scene1_end_frame = 250
+
+keyframe_visibility(aeroshell, scene1_start_frame, scene1_end_frame, False)
+keyframe_visibility(heatshield, scene1_start_frame, scene1_end_frame, False)
+keyframe_visibility(earth, scene1_start_frame, scene1_end_frame, False)
+keyframe_visibility(venus, scene1_start_frame, scene1_end_frame, False)
+
+# At frame 250, switch to the new Venus surface and background
+new_scene_start_frame = 251
+
+
+
