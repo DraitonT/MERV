@@ -76,6 +76,28 @@ def create_marker(name, position, marker_color):
     mat.diffuse_color = marker_color + (1,)  # RGBA, A needs to be 1 for full opacity
     marker.data.materials.append(mat)
 
+def create_glowing_orbit_material():
+    mat = bpy.data.materials.new(name="GlowingOrbitMaterial")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    # Remove default
+    for node in nodes:
+        nodes.remove(node)
+
+    # Add an emission node
+    emission = nodes.new(type='ShaderNodeEmission')
+    emission.inputs['Color'].default_value = (0, 1, 1, 1)  # Bright cyan color
+    emission.inputs['Strength'].default_value = 10  # Adjust the strength as needed
+
+    # Add material output
+    material_output = nodes.new(type='ShaderNodeOutputMaterial')
+
+    # Link nodes
+    links = mat.node_tree.links
+    link = links.new(emission.outputs['Emission'], material_output.inputs['Surface'])
+    
+    return mat
+
 def animate_orbit(planet, positions, frame_start, frame_end):
     # Create a new curve
     bpy.ops.curve.primitive_nurbs_path_add()
@@ -106,6 +128,41 @@ def animate_orbit(planet, positions, frame_start, frame_end):
     # Create markers for start and end positions
     create_marker(planet.name + "_Start", positions[0], marker_color=(1, 0, 0))
     create_marker(planet.name + "_End", positions[-1], marker_color=(0, 1, 0))
+    
+    # After the curve is created and named:
+    orbit_curve_name = planet.name + "_Orbit"
+    curve = bpy.data.objects[orbit_curve_name]  # Get the curve object using its name
+    
+    # Add a glowing material to the curve
+    mat = bpy.data.materials.new(name="GlowingOrbitMaterial")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    nodes.clear()
+
+    # Create emission node
+    emission = nodes.new(type='ShaderNodeEmission')
+    emission.inputs['Color'].default_value = (0.8, 0.5, 0.2, 1)  # Orange color, you can change this
+    emission.inputs['Strength'].default_value = 10  # Glow strength
+
+    # Attach emission node to material output
+    material_output = nodes.new(type='ShaderNodeOutputMaterial')
+    mat.node_tree.links.new(emission.outputs['Emission'], material_output.inputs['Surface'])
+
+    # Assign material to curve
+    if curve.data.materials:
+        curve.data.materials[0] = mat
+    else:
+        curve.data.materials.append(mat)
+
+    # Increase the curve's bevel to make it more visible
+    curve.data.bevel_depth = 0.05  # Adjust this value as needed
+    curve.data.bevel_resolution = 0  # Smoothness of the bevel
+
+    # Optional: enable 'Bloom' in Eevee for a glowing effect
+    bpy.context.scene.eevee.use_bloom = True
+
+    return curve
+
 
 # Function to import an STL file and scale it
 def import_stl(filepath, object_name, scale_factor):
