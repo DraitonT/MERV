@@ -42,6 +42,9 @@ inflationRateActual = (inflationRate * 100)/60;
  m_p = balloon_mass; % Mass of the parachute
  delta_e = 0.5; % Change in length of suspension lines (this is a placeholder, you need to determine the actual value)
 
+ %% Erosion related
+ E = 0.34E-24; % [cm^3] Erosion yield of Twflon FEP, table 12.8 of Pisacane
+ phi = 100;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   EDITABLE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  DO NOT EDIT  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -122,7 +125,10 @@ for i = 1:width(dataTable)
             A = 113.32; % [m^2] Total cross-sectional area of suspension lines (based on parachute radius) 
             P(j,i) = 2 * AKE(j,i) / delta_e; % Snatch force equation
         end
-        
+
+        F = phi .* dataTable.t .* v_terminal; % [atoms/cm^2] Atomic oxygen fluence
+        d = E .* F; % [cm] Depth of material loss (Equation 12.92, pg. 562)
+
         % Plot results for the current altitude data
         plot((dataTable.t * 100)/60, altitude_data/1000, 'DisplayName', varName);
         hold on;
@@ -256,7 +262,7 @@ grid on;
 % Save the figure
 saveas(gcf, 'ScaleHeightVsAltitude_Time.png');
 
-%% m
+
 %% Density
 figure;
 hold on
@@ -278,7 +284,14 @@ ylabel('Snatch Force (N)','Interpreter','latex');
 grid on
 saveas(gcf, 'Snatch Force vs. Time.png');
 
+%% Depth of Material Loss
+mu_Venus = 324859; % [km^3/s^2] 
+v_Venus = sqrt(mu_Venus/6097);
+phi = 100; % [atoms/(cm^2*s)] Solar flux
 
+F = phi .* (30 * 86400) * (v_Venus * 1E5); % [atoms/cm^2] Atomic oxygen fluence
+d_30 = E * F;
+d_30_nano = d_30 * 1E7;
 % %% Orbital Elements to RVs 
 % mu = 324859; % [km^3/s^2]
 % dataTable.Semimajor = dataTable.Semimajor + 6052 * 1000;
