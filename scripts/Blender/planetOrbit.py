@@ -80,6 +80,43 @@ def import_stl(filepath, object_name, scale_factor):
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)  # Apply the scaling
     return imported_object
 
+# Function to set up the space background
+def setup_space_background():
+    # Use an environment texture for the world background
+    bpy.context.scene.world.use_nodes = True
+    bg = bpy.context.scene.world.node_tree.nodes.new('ShaderNodeTexEnvironment')
+    bg.image = bpy.data.images.load(os.path.join(script_dir, '..', '..', 'data', 'Textures', 'Space_background.jpg'))  # Update the path to your space background image
+    bg.location = -300, 0
+    output = bpy.context.scene.world.node_tree.nodes.get('World Output')
+    bpy.context.scene.world.node_tree.links.new(bg.outputs['Color'], output.inputs['Surface'])
+
+# Function to create and set up a camera that follows an object
+def setup_follow_camera(target_object, radius, location=(0, 0, 10)):
+    # Create the camera
+    bpy.ops.object.camera_add(location=location)
+    camera = bpy.context.active_object
+    camera.name = 'FollowCamera'
+    
+    # Add a constraint to make the camera follow the target object
+    constraint = camera.constraints.new(type='TRACK_TO')
+    constraint.target = target_object
+    constraint.track_axis = 'TRACK_NEGATIVE_Z'
+    constraint.up_axis = 'UP_Y'
+    
+    # Parent the camera to an empty at the target location to control the distance
+    bpy.ops.object.empty_add(type='PLAIN_AXES', location=target_object.location)
+    empty = bpy.context.active_object
+    empty.name = 'CameraTargetEmpty'
+    camera.parent = empty
+    
+    # Set the radius (distance to the target)
+    camera.location.x = radius
+    camera.location.y = radius
+    camera.location.z = radius
+    
+    # Set the camera as the active camera for the scene
+    bpy.context.scene.camera = camera
+
 # Clear existing objects in the scene
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
@@ -176,3 +213,8 @@ heatshield.location = satellite_location
 # Apply the same animation to the satellite components
 animate_orbit(aeroshell, transfer_positions, frame_start=1, frame_end=250)
 animate_orbit(heatshield, transfer_positions, frame_start=1, frame_end=250)
+
+setup_space_background()
+
+# Set up the follow camera to track the aeroshell
+setup_follow_camera(aeroshell, radius=10)  # 'radius' is the distance from the target object
