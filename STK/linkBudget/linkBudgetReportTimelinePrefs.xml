@@ -1,0 +1,30 @@
+<?xml version = "1.0" standalone = "yes"?>
+<TimelineLine_Prefs STK_version = "12.2.0">
+    <Views Type = "Content">
+        <ContentView Name = "Scenario Availability">
+            <Row ClassName = "Scenario" ComponentName = "AvailabilityIntervals" DisplayName = "linkBudgetReport AvailabilityIntervals" IsDefaultName = "True" IsExpanded = "False" IsGroup = "False" IsHidden = "False" Path = "/Application/STK/Scenario/linkBudgetReport" Type = "IntervalList">
+                <Interval Name = "linkBudgetReport AvailabilityIntervals" StartTime = "28 Feb 2024 20:00:00.000" StopTime = "29 Feb 2024 20:00:00.000" />
+            </Row>
+            <Row ClassName = "Access" ComponentName = "AccessIntervals" DisplayName = "Satellite-Payload-To-Satellite-Crew AccessIntervals" IsDefaultName = "True" IsExpanded = "False" IsGroup = "False" IsHidden = "False" Path = "Access:/Application/STK/Scenario/linkBudgetReport/Satellite/Payload;/Application/STK/Scenario/linkBudgetReport/Satellite/Crew" Type = "IntervalList">
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "28 Feb 2024 21:20:49.663" StopTime = "28 Feb 2024 22:01:42.817" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "28 Feb 2024 22:47:14.880" StopTime = "28 Feb 2024 23:29:27.154" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 00:13:40.137" StopTime = "29 Feb 2024 00:56:23.652" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 01:40:16.454" StopTime = "29 Feb 2024 02:23:13.820" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 03:07:23.587" StopTime = "29 Feb 2024 03:50:22.076" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 04:35:55.713" StopTime = "29 Feb 2024 05:18:40.410" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 06:10:47.652" StopTime = "29 Feb 2024 06:53:36.790" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 08:42:10.328" StopTime = "29 Feb 2024 09:21:23.483" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 10:08:24.116" StopTime = "29 Feb 2024 10:50:13.140" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 11:34:48.485" StopTime = "29 Feb 2024 12:17:21.586" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 13:01:18.396" StopTime = "29 Feb 2024 13:44:11.501" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 14:28:08.977" StopTime = "29 Feb 2024 15:11:08.597" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 15:55:53.329" StopTime = "29 Feb 2024 16:38:45.860" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 17:26:39.481" StopTime = "29 Feb 2024 18:09:14.162" />
+                <Interval Name = "Satellite-Payload-To-Satellite-Crew AccessIntervals" StartTime = "29 Feb 2024 19:18:25.397" StopTime = "29 Feb 2024 19:50:26.702" />
+            </Row>
+        </ContentView>
+    </Views>
+    <Views Type = "Time">
+        <TimeView FullViewRulerStartTime = "0.000000" FullViewRulerStopTime = "0.000000" GlobalIntervalComp = "AnalysisInterval" GlobalIntervalCompPath = "/Application/STK/Scenario/linkBudgetReport" GlobalStartOffset = "0.000000" GlobalStartTime = "28 Feb 2024 20:00:00.000" GlobalStopOffset = "0.000000" GlobalStopTime = "29 Feb 2024 20:00:00.000" MaxFullViewTime = "0.000000" MinFullViewTime = "0.000000" Name = "Scenario Analysis Period" ViewportStartTime = "0.000000" ViewportStopTime = "0.000000" />
+    </Views>
+</TimelineLine_Prefs>

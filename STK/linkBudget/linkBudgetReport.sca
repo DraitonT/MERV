@@ -1,0 +1,118 @@
+stk.v.12.0
+WrittenBy    STK_v12.2.0
+BEGIN Access
+    Scenario/linkBudgetReport/Satellite/Payload
+    Scenario/linkBudgetReport/Satellite/Crew
+
+    IsComputed		 Yes
+    SaveComputedData		 Yes
+    ComputationMode		 1
+    UpdateOnReference		 Yes
+    DupIsDifferent		 No
+    UIOrderReversed		 No
+    UITimePeriod		 Object
+    UseLightTimeDelay		 Yes
+    ClockHost		 Base
+    TimeSense		 Transmit
+    AberrationType		 Annual
+    TimeDelayConvergence		 5e-05
+    SetMaxStepFromInsts		 Yes
+    MaxTimeStep		 360
+    MinTimeStep		 0.01
+    TimeConvergence		 0.005
+    AbsValueConvergence		 1e-14
+    RelValueConvergence		 1e-08
+    DetectEventsUsingSamplesOnly		 No
+
+    BEGIN ConsideredIntervals
+
+        2024-02-28T20:00:00.000000000 2024-02-29T20:00:00.000000000
+
+    END ConsideredIntervals
+
+    BEGIN AccessIntervals
+
+        2024-02-28T21:20:49.662782566 2024-02-28T22:01:42.817289651
+        2024-02-28T22:47:14.879958927 2024-02-28T23:29:27.154471364
+        2024-02-29T00:13:40.136647459 2024-02-29T00:56:23.651568704
+        2024-02-29T01:40:16.453577605 2024-02-29T02:23:13.820106932
+        2024-02-29T03:07:23.587265886 2024-02-29T03:50:22.076066791
+        2024-02-29T04:35:55.713143289 2024-02-29T05:18:40.410261584
+        2024-02-29T06:10:47.652430604 2024-02-29T06:53:36.790138889
+        2024-02-29T08:42:10.328488512 2024-02-29T09:21:23.482570839
+        2024-02-29T10:08:24.116375156 2024-02-29T10:50:13.140486099
+        2024-02-29T11:34:48.485138411 2024-02-29T12:17:21.585996168
+        2024-02-29T13:01:18.396493541 2024-02-29T13:44:11.501195496
+        2024-02-29T14:28:08.977039513 2024-02-29T15:11:08.597072482
+        2024-02-29T15:55:53.328711906 2024-02-29T16:38:45.859752255
+        2024-02-29T17:26:39.480979879 2024-02-29T18:09:14.162049515
+        2024-02-29T19:18:25.397466297 2024-02-29T19:50:26.701552039
+
+    END AccessIntervals
+
+    BEGIN StageList
+
+        BEGIN Stage
+
+            MaxRelMotion		 0.34
+
+            BEGIN ConstraintList
+
+                BEGIN Constraint
+
+                    Name		 LineOfSight
+                    Instance		 Object1
+                    Action		 IncludeIntervals
+                    Type		 ZeroBound
+                    ComputationID		 1
+
+                    BEGIN ConstraintInputTimes
+
+                        2024-02-28T20:00:00.000000000 2024-02-29T20:00:00.000000000
+
+                    END ConstraintInputTimes
+
+                    StartConstrainedByAvailability		 No
+                    StopConstrainedByAvailability		 No
+
+                    BEGIN ConstraintSatisfaction
+
+                        2024-02-28T21:20:49.662782566 2024-02-28T22:01:42.817289651
+                        2024-02-28T22:47:14.879958927 2024-02-28T23:29:27.154471364
+                        2024-02-29T00:13:40.136647459 2024-02-29T00:56:23.651568704
+                        2024-02-29T01:40:16.453577605 2024-02-29T02:23:13.820106932
+                        2024-02-29T03:07:23.587265886 2024-02-29T03:50:22.076066791
+                        2024-02-29T04:35:55.713143289 2024-02-29T05:18:40.410261584
+                        2024-02-29T06:10:47.652430604 2024-02-29T06:53:36.790138889
+                        2024-02-29T08:42:10.328488512 2024-02-29T09:21:23.482570839
+                        2024-02-29T10:08:24.116375156 2024-02-29T10:50:13.140486099
+                        2024-02-29T11:34:48.485138411 2024-02-29T12:17:21.585996168
+                        2024-02-29T13:01:18.396493541 2024-02-29T13:44:11.501195496
+                        2024-02-29T14:28:08.977039513 2024-02-29T15:11:08.597072482
+                        2024-02-29T15:55:53.328711906 2024-02-29T16:38:45.859752255
+                        2024-02-29T17:26:39.480979879 2024-02-29T18:09:14.162049515
+                        2024-02-29T19:18:25.397466297 2024-02-29T19:50:26.701552039
+
+                    END ConstraintSatisfaction
+
+                END Constraint
+
+            END ConstraintList
+
+        END Stage
+
+
+    END StageList
+
+    Show		 Yes
+    Inherit		 Yes
+    ShowIV		 Yes
+    ShowLineGfx		 Yes
+    ShowHiliteGfx		 Yes
+    LineWidth		 1
+
+    BEGIN Crdn
+    END Crdn
+
+END Access
+
