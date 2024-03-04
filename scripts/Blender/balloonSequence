@@ -20,7 +20,7 @@ def import_obj(filepath, object_name, scale_factor, location=None):
         
         # Now apply the location
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-
+  
     return imported_object
 
 
