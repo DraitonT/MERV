@@ -122,8 +122,18 @@ for i = 1:width(dataTable)
             AKE(j,i) = 0.5 * m_p * (2 * Vp1 * delta_V(j,i) + delta_V(j,i)^2); % Equation 2 from the paper
 
             % Calculate snatch force P using the derived equation (3)
-            A = 113.32; % [m^2] Total cross-sectional area of suspension lines (based on parachute radius) 
+            A = 11; % [m^2] Total cross-sectional area of suspension lines (based on parachute radius) 
             P(j,i) = 2 * AKE(j,i) / delta_e; % Snatch force equation
+            
+            % max(max(P))/32 to calculate snatch force as a function of the
+            % shock
+            % acceleration(j,i) = dataTable.t * 100)/60
+
+            D(j,i) =  (rho_at_altitude(j,i) * (v_terminal(j,i) * 1000)^2)/2 * Co_D * A;
+            m_air(j,i) = V(j,i) * rho_at_altitude(j,i);
+            v_drag(j,i) = D(j,i)/m_air(j,i) * (dataTable.t(i)* 100);
+
+            v_new(j,i) = v_terminal(j,i) * 1000 - v_drag(j,i);
         end
 
         F = phi .* dataTable.t .* v_terminal; % [atoms/cm^2] Atomic oxygen fluence
@@ -226,7 +236,7 @@ grid on
 % Altitude vs. Velocity
 figure;
 hold on
-plot(v_terminal(:,4), dataTable.h_child2/1000,'LineWidth',2,'Color','blue') 
+plot(v_new(:,4)/1000, dataTable.h_child2/1000,'LineWidth',2,'Color','blue') 
 title('Altitude vs Velocity','Interpreter','latex')
 xlabel('Velocity (km/s)','Interpreter','latex');
 ylabel('Altitude (km)','Interpreter','latex');
