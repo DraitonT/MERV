@@ -2,6 +2,9 @@ import bpy
 import csv
 import os
 from mathutils import Vector
+import random
+import math
+from bpy_extras.image_utils import load_image
 
 # Function to import an OBJ file and scale it
 def import_obj(filepath, object_name, scale_factor, location=None):
@@ -76,7 +79,7 @@ def create_dust_particle_system(emitter_object, particle_count, start_frame, end
     ps_settings.instance_object = dust_particle_shape  # Set the instance object to the dust particle shape
 
     # Adjust the scale and randomness of the particles
-    ps_settings.particle_size = 10  # Set the scale of the particles
+    ps_settings.particle_size = 3  # Set the scale of the particles
     ps_settings.size_random = 1  # Set the scale randomness
 
     # Modify gravity influence and other settings for a floating dust effect
@@ -187,19 +190,32 @@ def update_balloon_altitude(scene):
     try:
         # Retrieve the balloon object
         balloon = bpy.data.objects['Balloon']
-        # Update balloon's altitude. Make sure the CSV altitude is compatible with your scene scale.
-        altitude = float(csv_data[frame][1])  # This retrieves the altitude from the CSV for the current frame
-        balloon.location.z = altitude  # Update the y-axis location
-        balloon.keyframe_insert(data_path="location", frame=frame)  # Insert keyframe
+        
+        # Retrieve the altitude value from the CSV for the current frame and scale it
+        # Assuming the altitude in the CSV is given in meters and the Blender scene scale is 1 Blender unit = 1 meter
+        altitude = float(csv_data[frame][1]) /100  # Convert from m to Blender units if needed
+
+        # Introduce horizontal movement based on noise or other algorithms
+        # This is a simple random walk example; replace with your own logic
+        balloon.location.x += -0.5 # Random change in x
+        balloon.location.y += -0.5  # Random change in y
+
+        # Set the altitude
+        balloon.location.z = altitude
+
+        # Insert keyframes for location to record the movement
+        balloon.keyframe_insert(data_path="location", frame=frame)
+
     except IndexError as e:
-        # Handle the case where the frame number exceeds the number of entries in the CSV
+        # Handle the case where the frame number exceeds
+        #  the number of entries in the CSV
         pass
     except Exception as e:
         # Handle other exceptions
         print(f"An error occurred: {e}")
 
 # Function to create and set up a camera that follows an object
-def setup_follow_camera(target_object, radius, location=(0, 0, 10)):
+def setup_follow_camera(target_object, radius, location=(100, 5, 10), fov_degrees=90):
     # Create the camera
     bpy.ops.object.camera_add(location=location)
     camera = bpy.context.active_object
@@ -222,6 +238,9 @@ def setup_follow_camera(target_object, radius, location=(0, 0, 10)):
     camera.location.y = radius
     camera.location.z = radius
     
+    # Set the FOV of the camera
+    camera.data.lens = camera.data.sensor_width / (2 * math.tan(math.radians(fov_degrees) / 2))
+
     # Set the camera as the active camera for the scene
     bpy.context.scene.camera = camera
 
@@ -250,41 +269,57 @@ def setup_dashboard(camera, csv_data):
 
     return dashboard_empty
 
-def create_and_setup_dashboard(csv_data, camera, start_frame, end_frame):
+def create_and_setup_dashboard(csv_data, camera, start_frame, end_frame, text_color=(0, 1, 0, 1)):  # RGBA color, white by default
     # Create an empty object at the camera's location for the dashboard
     bpy.ops.object.empty_add(type='PLAIN_AXES', location=camera.location)
     dashboard_empty = bpy.context.active_object
     dashboard_empty.name = 'DashboardEmpty'
     
+    # Create a new material for the text color
+    text_mat = bpy.data.materials.new(name="TextMaterial")
+    text_mat.use_nodes = True
+    bsdf = text_mat.node_tree.nodes.get('Principled BSDF')
+    bsdf.inputs['Base Color'].default_value = text_color  # Set the color of the material
+    
     # Create a dictionary to hold the text objects
     dashboard_texts = {}
     
     # Get the number of data points
-    num_data_points = len(csv_data[0]) - 1  # assuming the first column is the frame number
-    
+    num_data_points = len(csv_data[0])  # assuming the first column is the frame number
+    flightCharacteristicList = csv_data[0]
     for i in range(num_data_points):
         # Create text object for each data point and parent to dashboard empty
         bpy.ops.object.text_add(location=(0, -i * 0.3, 0))  # Adjust Y position for each text
         text_obj = bpy.context.object
-        text_obj.name = f"DataText_{i}"
-        text_obj.data.body = f"Data Point {i}: 0"
+        currentChar = flightCharacteristicList[i]
+        text_obj.name = f"{currentChar}"
+        text_obj.data.body = f"{currentChar}: 0"
         text_obj.data.align_x = 'LEFT'
-        text_obj.data.size = 0.2  # Adjust to fit the display screen
+        text_obj.data.size = 0.4  # Adjust to fit the display screen
         text_obj.parent = dashboard_empty  # Parent to dashboard empty
+
+        # Assign the color material to the text object
+        if text_obj.data.materials:
+            text_obj.data.materials[0] = text_mat
+        else:
+            text_obj.data.materials.append(text_mat)
+
         dashboard_texts[i] = text_obj
     
     # Position the dashboard in front of the camera
     dashboard_empty.parent = camera
-    dashboard_empty.location = (0, 0, -5)  # Move 5 units in front of the camera
+    dashboard_empty.location = (-7, 0, -7)  # Move 5 units in front of the camera
     
     # Function to update text objects per frame
     def update_dashboard(scene):
         frame = scene.frame_current - start_frame
+        flightCharacteristicList = csv_data[0]
         if frame >= 0 and frame < len(csv_data):
             # Update each text object with the corresponding data point
             for i, text_obj in dashboard_texts.items():
                 # Assuming the CSV columns are in the correct order
-                text_obj.data.body = f"Data Point {i}: {csv_data[frame][i+1]}"
+                currentChar = flightCharacteristicList[i]
+                text_obj.data.body = f"{currentChar}: {csv_data[frame][i]}"
     
     # Remove existing handlers that start with "update_dashboard"
     for handler in bpy.app.handlers.frame_change_pre:
@@ -295,6 +330,41 @@ def create_and_setup_dashboard(csv_data, camera, start_frame, end_frame):
     bpy.app.handlers.frame_change_pre.append(update_dashboard)
 
     return dashboard_empty
+
+def import_obj_and_apply_texture(filepath, object_name, scale_factor, location, texture_path):
+    # Import the OBJ file
+    bpy.ops.wm.obj_import(filepath=filepath)
+    imported_object = bpy.context.selected_objects[0]
+    imported_object.name = object_name
+    imported_object.scale *= scale_factor
+
+    # Apply the scale
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+    if location is not None:
+        imported_object.location = Vector(location)
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+
+    # Create a new material with a texture
+    mat = bpy.data.materials.new(name=object_name + "_Material")
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes.get('Principled BSDF')
+    texture_node = mat.node_tree.nodes.new('ShaderNodeTexImage')
+    
+    # Load the texture image
+    texture_image = load_image(texture_path)
+    texture_node.image = texture_image
+    
+    # Link the texture node to the BSDF node
+    mat.node_tree.links.new(bsdf.inputs['Base Color'], texture_node.outputs['Color'])
+    
+    # Assign the material to the object
+    if imported_object.data.materials:
+        imported_object.data.materials[0] = mat
+    else:
+        imported_object.data.materials.append(mat)
+
+    return imported_object
 
 # Clear existing objects in the scene
 bpy.ops.object.select_all(action='SELECT')
@@ -313,13 +383,24 @@ backgroundFilePath = os.path.join(script_dir, '..', '..', 'data', 'Textures', 'v
 setup_background(backgroundFilePath)
 
 scale_factor = 1e3
+
 low_res_venus_path = os.path.join(script_dir, '..', '..', 'Models', 'LowResMesh.obj')  # Update this to your correct file path
 
 new_venus_scale_factor = 1/(scale_factor /1000)  # Adjust as needed
-new_venus = import_obj(low_res_venus_path, 
-                       'LowResVenus', 
-                       new_venus_scale_factor, 
-                       location=(500, 500, 0.0))
+# new_venus = import_obj(low_res_venus_path, 
+#                        'LowResVenus', 
+#                        new_venus_scale_factor, 
+#                        location=(500, 500, 0.0))
+
+texture_path = "M:\\dev\\MATLAB\\ARO 4811L\\data\\Textures\\venusUVMap.jpg"
+low_res_venus_path = os.path.join(script_dir, '..', '..', 'Models', 'LowResMesh.obj')
+new_venus = import_obj_and_apply_texture(
+    filepath=low_res_venus_path,
+    object_name='LowResVenus',
+    scale_factor=new_venus_scale_factor,
+    location=(500, 500, 0.0),
+    texture_path=texture_path
+)
 
 balloon_Path = os.path.join(script_dir, '..', '..', 'Models', 'balloon_Sphercial.obj')  # Update this to your correct file path
 balloon = import_obj(balloon_Path, 'Balloon', 1)
@@ -415,13 +496,13 @@ csv_filepath = os.path.join(script_dir, '..', '..', 'data', 'resultsData_float.c
 csv_data = load_csv_data(csv_filepath)
 
 # Create the dashboard
-create_dashboard(csv_data, bpy.context.scene.frame_start, bpy.context.scene.frame_end)
+# create_dashboard(csv_data, bpy.context.scene.frame_start, bpy.context.scene.frame_end)
 
 # Append the handler to update balloon's altitude
 bpy.app.handlers.frame_change_pre.append(update_balloon_altitude)
 
 # Camera set-up
-camera = setup_follow_camera(balloon, radius=10)
+camera = setup_follow_camera(balloon, radius=5)
 
 # # Create the dashboard
 # dashboard = setup_dashboard(camera, csv_data)
