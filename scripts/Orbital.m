@@ -336,7 +336,7 @@ classdef Orbital
          end
     %% 2.2 Plotting Orbit using time and state vectors (position and velocity)
         function plot2Body(state, color)
-            earthTextureImage = append(pwd, '\..\data\earth_texture.png');
+            earthTextureImage = append(pwd, '\..\data\Textures\earth_texture.png');
             % Extract the position vectors from the state variable
             x = state(:, 1);
             y = state(:, 2);

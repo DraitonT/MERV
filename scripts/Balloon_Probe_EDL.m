@@ -334,12 +334,12 @@ d_30_nano = d_30 * 1E7;
 
 %% Saving all the new data to a CSV with the altitude and time values
 % After all calculations are done, create a table with the generated data
-resultsTable = table(dataTable.t, altitude_data, pressure_at_altitude, temperature_at_altitude, v_terminal, F_buoyancy, F_gravity, ... % Add other arrays as needed
+resultsTable = table((dataTable.t * 100)/60, altitude_data, pressure_at_altitude, temperature_at_altitude, v_terminal, F_buoyancy, F_gravity, ... % Add other arrays as needed
     'VariableNames', {'Time', 'Altitude', 'Pressure_at_Altitude', 'Temperature_at_Altitude', 'Terminal_Velocity', 'Buoyancy force', 'Gravity Force'}); % Update with actual variable names
 
 % Define the name and path for the new CSV file
 newFileName = 'resultsData.csv';
-newFullPath = fullfile(relativePathToFile, newFileName);
+newFullPath = append(pwd,'\..\data\', newFileName);
 
 % Write the table to a new CSV file
 writetable(resultsTable, newFullPath);

@@ -1,8 +1,5 @@
-function [a, e, TA, RAAN, AOP, i] = rv2coe(r, v)
-        ra = max(vecnorm(r));
-        rp = min(vecnorm(r));
-
-        mu = 398600; 
+function [a, e, TA, RAAN, AOP, i, h_vec] = rv2coe(r, v)
+        mu = 132712440018; 
         r_mag = vecnorm(r);
 
         v_mag = vecnorm(v);
@@ -28,12 +25,12 @@ function [a, e, TA, RAAN, AOP, i] = rv2coe(r, v)
 
         r_p = h_mag^2/mu * (1/(1+e*cos(0)));
         r_a = h_mag^2/mu * (1/(1+e*cos(180)));
-
-        a = (ra + rp)/2;
-
-
-        a = (rp + ra)/2;                        % Semi-major axis [km] (2.71, pg. 81 | Curtis)
-        e = -((rp/a) - 1);                      % Eccentricity [unitless](2.73, pg. 82 | Curtis)
+        % 
+        a = (r_a + r_p)/2;
+        % 
+        % 
+        % a = (rp + ra)/2;                        % Semi-major axis [km] (2.71, pg. 81 | Curtis)
+        % e = -((rp/a) - 1);                      % Eccentricity [unitless](2.73, pg. 82 | Curtis)
         % V_c = sqrt(mu / r_analytical);
         % T_c = (2*pi/sqrt(mu)) * a^(3/2);        % Orbital Period [seconds] (2.83, pg. 84 | Curtis)
         % epsilon = -mu/(2*a);                    % Specific Energy [km^2/s^2] (2.80, pg. 83) | Curtis)

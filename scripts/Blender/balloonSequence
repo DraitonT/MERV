@@ -1,0 +1,264 @@
+import bpy
+import csv
+import os
+from mathutils import Vector
+
+# Function to import an OBJ file and scale it
+def import_obj(filepath, object_name, scale_factor, location=None):
+    bpy.ops.wm.obj_import(filepath=filepath)
+    imported_object = bpy.context.selected_objects[0]
+    imported_object.name = object_name
+    imported_object.scale *= scale_factor
+
+    # Apply the scale
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+    if location is not None:
+        # Assuming that the object's origin is where it should be in the local space
+        # If not, you might need to set the origin to the geometry or a specific point first
+        imported_object.location = Vector(location)
+        
+        # Now apply the location
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+
+    return imported_object
+
+
+
+# Function to set up the space background
+def setup_background(backgroundFilePath):
+    # Use an environment texture for the world background
+    bpy.context.scene.world.use_nodes = True
+    bg = bpy.context.scene.world.node_tree.nodes.new('ShaderNodeTexEnvironment')
+    bg.image = bpy.data.images.load(backgroundFilePath)  # Update the path to your space background image
+    bg.location = -300, 0
+    output = bpy.context.scene.world.node_tree.nodes.get('World Output')
+    bpy.context.scene.world.node_tree.links.new(bg.outputs['Color'], output.inputs['Surface'])
+
+# Function to load CSV data
+def load_csv_data(filepath):
+    with open(filepath, 'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        data = list(csvreader)
+    return data
+
+# Function to update text object per frame
+def update_text(scene):
+    frame = scene.frame_current
+    try:
+        # Assuming first column is frame number, second is the value to display
+        value = csv_data[frame][1]
+        text_object = bpy.data.objects['Text']
+        text_object.data.body = value
+        print(f"Frame {frame}: {value}")  # For debugging purposes
+    except IndexError as e:
+        # No data for this frame, or end of data reached
+        print(f"IndexError for frame {frame}: {e}")  # For debugging purposes
+    except Exception as e:
+        print(f"Unexpected error for frame {frame}: {e}")  # For debugging purposes
+
+# Function to create a particle system to simulate dust
+def create_dust_particle_system(emitter_object, particle_count, start_frame, end_frame, dust_particle_shape):
+    # Create a new particle system for the emitter object
+    emitter_object.modifiers.new(name="DustParticles", type='PARTICLE_SYSTEM')
+    particle_system = emitter_object.particle_systems[-1]  # get the newly created particle system
+    ps_settings = particle_system.settings
+    ps_settings.count = particle_count
+    ps_settings.frame_start = start_frame
+    ps_settings.frame_end = end_frame
+    ps_settings.lifetime = 400  # Adjust as needed
+    ps_settings.lifetime_random = 0.5
+    ps_settings.factor_random = 1
+    ps_settings.physics_type = 'NEWTON'
+    ps_settings.use_rotations = True
+    ps_settings.use_dynamic_rotation = True
+    ps_settings.render_type = 'OBJECT'  # Set render type to OBJECT
+    ps_settings.instance_object = dust_particle_shape  # Set the instance object to the dust particle shape
+
+    # Adjust the scale and randomness of the particles
+    ps_settings.particle_size = 10  # Set the scale of the particles
+    ps_settings.size_random = 1  # Set the scale randomness
+
+    # Modify gravity influence and other settings for a floating dust effect
+    ps_settings.effector_weights.gravity = 0  # Reducing gravity's influence
+    # Additional settings like brownian, drag, etc. can be set here
+
+    return particle_system
+
+
+# Function to add a turbulence force field
+def add_turbulence_force_field(strength=1, size=1):
+    bpy.ops.object.effector_add(type='FORCE', enter_editmode=False, align='WORLD', location=(0, 0, 0))
+    turbulence_field = bpy.context.object
+    turbulence_field.field.type = 'TURBULENCE'
+    turbulence_field.field.strength = strength
+    turbulence_field.field.size = size
+    turbulence_field.name = 'TurbulenceField'
+    return turbulence_field
+
+# Function to create a dust particle shape
+def create_dust_particle_shape():
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=0.02)
+    dust_particle = bpy.context.object
+    dust_particle.name = 'DustParticleShape'
+    return dust_particle
+
+# Function to create a dust material with variable transparency and color
+def create_dust_material():
+    mat = bpy.data.materials.new(name="DustMaterial")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    
+    # Remove default nodes
+    for node in nodes:
+        nodes.remove(node)
+
+    # Create a Mix Shader Node to mix Transparent and Diffuse shaders
+    mix_shader = nodes.new(type='ShaderNodeMixShader')
+    
+    # Create a Transparent BSDF Node
+    transparent_bsdf = nodes.new(type='ShaderNodeBsdfTransparent')
+    transparent_bsdf.inputs['Color'].default_value = (1, 1, 1, 0.1)  # Almost fully transparent
+
+    # Create a Diffuse BSDF Node
+    diffuse_bsdf = nodes.new(type='ShaderNodeBsdfDiffuse')
+    diffuse_bsdf.inputs['Color'].default_value = (0.8, 0.65, 0.4, 1)  # Dust color
+
+    # Create a Noise Texture Node to vary the factor of the mix shader
+    noise_tex = nodes.new(type='ShaderNodeTexNoise')
+    noise_tex.inputs['Scale'].default_value = 500  # High scale for fine-grained noise
+
+    # Create Material Output Node
+    material_output = nodes.new(type='ShaderNodeOutputMaterial')
+
+    # Link nodes together
+    links.new(noise_tex.outputs['Fac'], mix_shader.inputs['Fac'])
+    links.new(transparent_bsdf.outputs['BSDF'], mix_shader.inputs[1])
+    links.new(diffuse_bsdf.outputs['BSDF'], mix_shader.inputs[2])
+    links.new(mix_shader.outputs['Shader'], material_output.inputs['Surface'])
+
+    return mat
+# Function to create a sun lamp
+def create_sun(location, strength=5, sun_color=(1, 1, 1)):
+    bpy.ops.object.light_add(type='SUN', location=location)
+    sun = bpy.context.active_object
+    sun.data.energy = strength
+    sun.data.color = sun_color
+    return sun
+
+
+
+# Clear existing objects in the scene
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+# Create the sun lamp
+sun_location = (100, 100, 100)  # Position the sun lamp at a suitable location
+sun_strength = 5  # Adjust the strength as needed
+sun_color = (1, 1, 0.95)  # Sunlight color can be slightly yellow
+sun = create_sun(sun_location, strength=sun_strength, sun_color=sun_color) 
+
+# Get the directory of the current script file
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+backgroundFilePath = os.path.join(script_dir, '..', '..', 'data', 'Textures', 'venusAtmo.jpg')
+setup_background(backgroundFilePath)
+
+scale_factor = 1e3
+low_res_venus_path = os.path.join(script_dir, '..', '..', 'Models', 'LowResMesh.obj')  # Update this to your correct file path
+
+new_venus_scale_factor = 1/(scale_factor /1000)  # Adjust as needed
+new_venus = import_obj(low_res_venus_path, 
+                       'LowResVenus', 
+                       new_venus_scale_factor, 
+                       location=(500, 500, 0.0))
+
+balloon_Path = os.path.join(script_dir, '..', '..', 'Models', 'balloonBase_save.obj')  # Update this to your correct file path
+balloon = import_obj(balloon_Path, 'Balloon', 1)
+
+# Load CSV data
+csv_filepath = os.path.join(script_dir, '..', '..', 'data', 'resultsData.csv')
+csv_data = load_csv_data(csv_filepath)
+
+# Create or find the display object
+display_object_name = 'DisplayScreen'  # Replace with your display object's name
+if display_object_name not in bpy.data.objects:
+    # If a display object doesn't exist, create one (e.g., a plane)
+    bpy.ops.mesh.primitive_plane_add(size=2, location=(0, 0, 0))  # Adjust size and location
+    display_object = bpy.context.object
+    display_object.name = display_object_name
+else:
+    display_object = bpy.data.objects[display_object_name]
+
+# Create or find the text object
+if 'Text' not in bpy.data.objects:
+    bpy.ops.object.text_add(location=(0, 0, 0))
+    text_object = bpy.context.object
+    text_object.name = 'Text'
+else:
+    text_object = bpy.data.objects['Text']
+    text_object.data.body = ''
+
+# Set the font size and alignment as needed
+text_object.data.align_x = 'CENTER'
+text_object.data.size = 0.2  # Adjust to fit the display screen
+
+# Parent the text to the display
+text_object.parent = display_object
+# Reset location to center on the display, and adjust as needed
+text_object.location.x = 0
+text_object.location.y = 0
+text_object.location.z = 0.01  # Slightly in front of the display
+
+# Set the animation start and end frames
+bpy.context.scene.frame_start = 0
+bpy.context.scene.frame_end = 750
+
+# Update the text for the current frame
+update_text(bpy.context.scene)
+
+# Remove existing handlers that start with "update_text"
+for handler in bpy.app.handlers.frame_change_pre:
+    if "update_text" in str(handler):
+        bpy.app.handlers.frame_change_pre.remove(handler)
+
+# Append the handler
+bpy.app.handlers.frame_change_pre.append(update_text)
+
+# Add a turbulence field to the scene
+add_turbulence_force_field(strength=5, size=2)  # Adjust the strength and size as needed
+
+# Call the function to add a particle system to the Venus object
+dust_Path = os.path.join(script_dir, '..', '..', 'Models', 'dust.obj')  # Update this to your correct file path
+dust_obj = import_obj(dust_Path, 
+                       'Dust', 
+                       1, 
+                       location=(0,0,0))
+# Create the dust particle shape
+dust_particle_shape = create_dust_particle_shape()
+
+# Create the dust material
+dust_material = create_dust_material()
+
+# Assign the dust material to the particle shape
+dust_particle_shape.data.materials.append(dust_material)
+
+# Call the function to add a particle system to the Venus object
+# Pass the dust_particle_shape to the create_dust_particle_system function
+create_dust_particle_system(dust_obj, 1000, 0, 750, dust_particle_shape)  # Adjust particle_count as needed
+
+# Create the dust particle shape
+dust_particle = create_dust_particle_shape()
+
+# Create the dust material
+dust_material = create_dust_material()
+
+# Assign the dust material to the particle shape
+dust_particle.data.materials.append(dust_material)
+
+# Make sure to set the particle system to use the dust particle shape
+if 'DustParticles' in bpy.context.object.modifiers:
+    particle_system = bpy.context.object.particle_systems['DustParticles']
+    particle_system.settings.render_type = 'OBJECT'
+    particle_system.settings.instance_object = dust_particle
