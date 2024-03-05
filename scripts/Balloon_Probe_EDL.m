@@ -122,7 +122,7 @@ for i = 1:width(dataTable)
             AKE(j,i) = 0.5 * m_p * (2 * Vp1 * delta_V(j,i) + delta_V(j,i)^2); % Equation 2 from the paper
 
             % Calculate snatch force P using the derived equation (3)
-            A = 11; % [m^2] Total cross-sectional area of suspension lines (based on parachute radius) 
+            A = 2; % [m^2] Total cross-sectional area of suspension lines (based on parachute radius) 
             P(j,i) = 2 * AKE(j,i) / delta_e; % Snatch force equation
             
             % max(max(P))/32 to calculate snatch force as a function of the
@@ -150,7 +150,7 @@ for i = 1:width(dataTable)
         grid on
         
         % Display the terminal velocity at the last calculated point
-        fprintf('Terminal velocity for %s at %.2f s: %.2f m/s\n', varName, dataTable.t(end), v_terminal(end));
+        fprintf('Terminal velocity for %s at %.2f minute: %.2f m/s\n', varName, (dataTable.t(end)*100)/60, v_terminal(end));
     end
     xline((20 * 100)/60, 'k--', 'Label', 'Separation Child 1');
     xline((50 * 100)/60, 'k--', 'Label', 'Separation Child 1');
