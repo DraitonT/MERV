@@ -25,7 +25,7 @@ system_mass = 3901.24; % [kg]
 R = 188.92; % Specific gas constant for CO2 in J/(kg*K)
 
 % Define the relative path to the CSV file
-relativePathToFile = '..\Genesis-v0.3.0\Project\multi_vehicle\';
+relativePathToFile = '..\data\';
 fileName = 'output.csv';
 
 inflationRate = 10; % [m^3/s] Placeholder inflation rate
@@ -236,7 +236,7 @@ grid on
 % Altitude vs. Velocity
 figure;
 hold on
-plot(v_new(:,4)/1000, dataTable.h_child2/1000,'LineWidth',2,'Color','blue') 
+plot(v_new(:,4), dataTable.h_child2/1000,'LineWidth',2,'Color','blue') 
 title('Altitude vs Velocity','Interpreter','latex')
 xlabel('Velocity (km/s)','Interpreter','latex');
 ylabel('Altitude (km)','Interpreter','latex');
