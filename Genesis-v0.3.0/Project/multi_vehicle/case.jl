@@ -24,12 +24,12 @@ function run()
                                   frame=PCI(venus)))
 
     set_position!(parent,
-                  planetodetic_altitude=100 * 1000,
+                  planetodetic_altitude=300 * 1000,
                   planetodetic_latitude=0,
                   longitude=0)
 
     set_velocity!(parent,
-                  planet_relative_velocity=3029,
+                  planet_relative_velocity=18000,
                   planetodetic_planet_relative_flight_path_angle=-10/180*pi,
                   planetodetic_planet_relative_azimuth=0)
 

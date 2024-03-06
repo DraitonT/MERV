@@ -198,7 +198,7 @@ def update_balloon_altitude(scene):
         # Introduce horizontal movement based on noise or other algorithms
         # This is a simple random walk example; replace with your own logic
         balloon.location.x += -0.5 # Random change in x
-        balloon.location.y += -0.5  # Random change in y
+        balloon.location.y += 0  # Random change in y
 
         # Set the altitude
         balloon.location.z = altitude
@@ -215,7 +215,7 @@ def update_balloon_altitude(scene):
         print(f"An error occurred: {e}")
 
 # Function to create and set up a camera that follows an object
-def setup_follow_camera(target_object, radius, location=(100, 5, 10), fov_degrees=90):
+def setup_follow_camera(target_object, radius, location=(-200, -30, 31), fov_degrees=90):
     # Create the camera
     bpy.ops.object.camera_add(location=location)
     camera = bpy.context.active_object
@@ -366,6 +366,94 @@ def import_obj_and_apply_texture(filepath, object_name, scale_factor, location, 
 
     return imported_object
 
+# Function to create and set up a static camera
+def setup_static_camera(location=(100, 5, 10), fov_degrees=90):
+    # Create the camera
+    bpy.ops.object.camera_add(location=location)
+    camera = bpy.context.active_object
+    camera.name = 'StaticCamera'
+    
+    # Set the FOV of the camera
+    camera.data.lens = camera.data.sensor_width / (2 * math.tan(math.radians(fov_degrees) / 2))
+
+    # Set the camera as the active camera for the scene
+    bpy.context.scene.camera = camera
+
+    return camera
+
+   
+def import_obj_follow_camera(filepath, camera, location, scale_factor=1):
+    # Step 1: Import the OBJ file
+    bpy.ops.wm.obj_import(filepath=filepath)
+    imported_obj = bpy.context.selected_objects[0]  # Assuming the OBJ only contains one object
+    imported_obj.scale *= scale_factor  # Adjust scale if necessary
+
+    # Apply the scale
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+    # Step 2: Create an empty object at the camera's location
+    bpy.ops.object.empty_add(type='PLAIN_AXES', location=camera.location)
+    follow_empty = bpy.context.active_object
+    follow_empty.name = 'FollowEmpty'
+
+    # Step 3: Parent the imported OBJ to the empty object
+    imported_obj.parent = follow_empty
+
+    # Step 4: Make the empty object follow the camera
+    follow_empty.parent = camera
+    follow_empty.location = location  # Adjust the relative location
+
+    return imported_obj
+
+def apply_texture_to_object(object_name, texture_path):
+    # Check if the object exists in the scene
+    if object_name not in bpy.data.objects:
+        print(f"Object '{object_name}' not found in the scene.")
+        return
+
+    # Get the object
+    obj = bpy.data.objects[object_name]
+
+    # Create a new material
+    mat = bpy.data.materials.new(name=f"{object_name}_Material")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+
+    # Clear existing nodes
+    nodes.clear()
+
+    # Create a Principled BSDF shader node
+    shader = nodes.new(type='ShaderNodeBsdfPrincipled')
+    shader.location = (0, 0)
+
+    # Create an Image Texture node
+    tex_image = nodes.new('ShaderNodeTexImage')
+    tex_image.location = (-300, 0)
+
+    # Load and assign the image to the texture node
+    tex_image.image = load_image(texture_path)
+
+    # Create a Material Output node
+    output = nodes.new(type='ShaderNodeOutputMaterial')
+    output.location = (200, 0)
+
+    # Link the texture node to the Principled BSDF shader node
+    links = mat.node_tree.links
+    links.new(tex_image.outputs['Color'], shader.inputs['Base Color'])
+
+    # Link the shader node to the material output
+    links.new(shader.outputs['BSDF'], output.inputs['Surface'])
+
+    # Assign the material to the object
+    if len(obj.data.materials):
+        # Replace the first material
+        obj.data.materials[0] = mat
+    else:
+        # No materials present, add the new one
+        obj.data.materials.append(mat)
+
+    print(f"Texture applied to '{object_name}'.")
+
 # Clear existing objects in the scene
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
@@ -392,7 +480,9 @@ new_venus_scale_factor = 1/(scale_factor /1000)  # Adjust as needed
 #                        new_venus_scale_factor, 
 #                        location=(500, 500, 0.0))
 
+
 texture_path = "M:\\dev\\MATLAB\\ARO 4811L\\data\\Textures\\venusUVMap.jpg"
+dashBoard_Path = os.path.join(script_dir, '..', '..', 'data', 'Textures' , 'venusUVMap.jpg')
 low_res_venus_path = os.path.join(script_dir, '..', '..', 'Models', 'LowResMesh.obj')
 new_venus = import_obj_and_apply_texture(
     filepath=low_res_venus_path,
@@ -502,10 +592,16 @@ csv_data = load_csv_data(csv_filepath)
 bpy.app.handlers.frame_change_pre.append(update_balloon_altitude)
 
 # Camera set-up
-camera = setup_follow_camera(balloon, radius=5)
+camera = setup_follow_camera(balloon, radius=10)
 
 # # Create the dashboard
 # dashboard = setup_dashboard(camera, csv_data)
 
 # Now call the function to create and set up the dashboard
 dashboard_empty = create_and_setup_dashboard(csv_data, camera, bpy.context.scene.frame_start, bpy.context.scene.frame_end)
+
+dashBoard_TexturePath = os.path.join(script_dir, '..', '..', 'data', 'Textures' , 'display.png')
+dashboard_obj = os.path.join(script_dir, '..', '..', 'Models', 'dashboard.obj')
+
+dashBoard = import_obj_follow_camera(filepath=dashboard_obj, camera=camera, location=(0, 0, -5), scale_factor=0.1)
+apply_texture_to_object('Plane', dashBoard_TexturePath)
