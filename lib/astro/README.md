@@ -18,9 +18,7 @@ The team plans to seperate this large package into a number of smaller specializ
 To calculate the entry angle of the trajectory along with the angle along it, the team developed this function: 
 
 $$ 
-
 \theta = \cos^{-1} \frac{\vec{v_{1}} \cdot \vec{v_{2}}}{|| v_{1} \times v_{2} ||}
-
 $$
 
 where 
@@ -32,21 +30,15 @@ where
 Calculates the state vectors of the orbit based on the provided radius of apoapsis and radius of periapsis.
 
 $$
-
 a = \frac{(r_a + r_p)}{2} 
-
 $$
 
 $$
-
 e = \frac{(r_a - r_p)}{(r_a + r_p)}
-
 $$
 
 $$
-
 [r_I, v_I] = coe2rv(e, a, 0, 0, 0, 0, \mu);
-
 $$
 
 ## coe2rv
