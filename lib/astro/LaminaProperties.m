@@ -8,8 +8,8 @@
 % other .m files required: None
 % other files required (not .m): 
 
-function LaminaProperties(Vf, Ef, Gf, vf, Vm, Em, Gm, vm)
-    %% LAMINAPROPERTIES
+function [E1, E2, G12, v12, v21] = LaminaProperties(Vf, Ef, Gf, vf, Vm, Em, Gm, vm)
+    %% LAMINAPROPERTIES calculates the lamina properties of the material from a set of given parameters
     % Inputs:
     % Vf: Volume fraction of fiber
     % Ef: Fiber modulus 

@@ -1,4 +1,18 @@
 function [r_I, v_I] = coe2rv(e, a, i, w, Om, TA, mu)
+    % COE2RV calculates the state vector (position and velocity vector) from the 
+    % classicial orbital elements
+    % Inputs:
+    % e - Eccentricity [1x1]
+    % a - Semi-major axis (km) [1x1]
+    % i - Inclination (deg) [1x1]
+    % w - Argument of perigee (deg) [1x1]
+    % Om - Right Ascension of Ascending Node (deg) [1x1]
+    % TA - True Anomaly (deg) [1x1]
+    %
+    % Outputs:
+    % r_I - Position vector (km) [3x1]
+    % v_I - Velocity vector (km) [3x1]
+
     % Calculate the specific angular momentum
     h = sqrt(a * mu * (1 - e^2));
     

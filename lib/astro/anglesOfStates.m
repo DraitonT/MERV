@@ -1,20 +1,14 @@
 function angle = anglesOfStates(vector1, vector2)
-% ANGLESOFSTATES 
+% ANGLESOFSTATES produces the angles between a set of vectors
 %
-% Example:
-% transferStatePath = append(pwd, '\..\data\', 'Transfer_States.csv');
-% venusStatePath = append(pwd, '\..\data\', 'Venus_States.csv');
-% dataTableTransfer = readtable(transferStatePath);
-% dataTableVenus = readtable(venusStatePath);
-% 
-% endStatesTransfer = [dataTableTransfer.X(end,end)...
-% dataTableTransfer.Y(end,end)... 
-% dataTableTransfer.Z(end,end)]';
-% 
-% endStatesVenus = [dataTableVenus.X(end,end)...
-% dataTableVenus.Y(end,end)...
-% dataTableVenus.Z(end,end)]';
+% Inputs:
+%   vector1 - [3 x N]
+%   vector2 - [3 x N]
+% Outputs: 
+%   angle - (deg) [1 x N]
+%
 
-angle = acosd(dot(vector1, vector2) / (vecnorm(vector1) * vecnorm(vector2)));
+
+angle = acosd(dot(vector1, vector2) ./ (vecnorm(vector1) .* vecnorm(vector2)));
 
 end
