@@ -140,7 +140,7 @@ def animate_orbit(planet, positions, frame_start, frame_end):
     nodes.clear()
 
     # Create emission node
-    emission = nodes.new(type='ShaderNodeEmission')
+    emission = nodes.new(type='ShaderNodeEmission')  
     emission.inputs['Color'].default_value = (0.8, 0.5, 0.2, 1)  # Orange color, you can change this
     emission.inputs['Strength'].default_value = 10  # Glow strength
 
