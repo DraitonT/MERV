@@ -5,15 +5,15 @@ Mission Exploration and Research of Venus is a project ran by a group of student
 The concept of the mission is develop a near-surface Venus balloon hovering around the **goldilocks zone** around **45-55km** from the Venusian surface to collect scientific data on the atmosphere and analyze the minerals and surface composition while being supported by a crew of 4 orbiting around Venus in a 30 day time span.  
 
 ## Team Members 
-1. Michael Quach - Program Manager
-2. Francisco Sanudo - Deputy Project Manager 
-3. Eric Ruf - ADCS Lead 
-4. Alejandro Wuence - COMMs Lead 
-5. Rene Holmes - Propulsion Lead 
-6. JD Morrisey - Payload Lead 
-7. Alton Lo - Structures Lead 
-8. Peter Ho - Systems Engineering Lead 
-9. Harold Hernandez - Thermal Lead 
+1. Michael Quach - Program Manager (mdquach@cpp.edu)
+2. Francisco Sanudo - Deputy Project Manager (fjsanudo@cpp.edu)
+3. Eric Ruf - ADCS Lead (erruf@cpp.edu)
+4. Alejandro Wuence - COMMs Lead (awuence@cpp.edu)
+5. Rene Holmes - Propulsion Lead (rjholmes@cpp.edu)
+6. JD Morrisey - Payload Lead (jdmorrissey@cpp.edu)
+7. Alton Lo - Structures Lead (altonlo@cpp.edu)
+8. Peter Ho - Systems Engineering Lead (pkho@cpp.edu)
+9. Harold Hernandez - Thermal Lead (hghernandez@cpp.edu)
 
 ## Tool Utilized 
 1. MATLAB 
