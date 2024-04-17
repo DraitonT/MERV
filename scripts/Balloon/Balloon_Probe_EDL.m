@@ -14,18 +14,18 @@ clc, clear, close all
 
 % Inflation gas 
 density_gas = 0.08988; % [kg/m^3] Hydrogen
-volume = 125; % [m^3] Volume of the balloon
+volume = 1570; % [m^3] Volume of the balloon
 
 % Inputs for the balloon probe system
-balloon_mass = 718.6953082; % [kg] mass of the balloon probe system
-spacecraft_mass = 3423; % [kg]
-system_mass = 1432.94; % [kg]
+balloon_mass = 548.06; % [kg] mass of the balloon probe system
+spacecraft_mass = 4098.84; % [kg]
+system_mass = spacecraft_mass + balloon_mass; % [kg]
 
 % Venusian atmospheric properties
 R = 188.92; % Specific gas constant for CO2 in J/(kg*K)
 
 % Define the relative path to the CSV file
-relativePathToFile = '..\data\';
+relativePathToFile = '..\..\data\';
 fileName = 'output.csv';
 
 inflationRate = 5224; % [m^3/s] Placeholder inflation rate
@@ -146,14 +146,17 @@ for i = 1:width(dataTable)
         xlabel('Time (minutes)','Interpreter','latex');
         ylabel('Altitude (km)','Interpreter','latex');
         ylim([0, max(altitude_data/1000)])
-        legend({'Back shell', 'Heatshield', 'Payload', 'Chute'}, 'Location', 'southeast');
+       
+        saveas(gcf, 'AltitudeVsTime.png');
         grid on
         
         % Display the terminal velocity at the last calculated point
         fprintf('Terminal velocity for %s at %.2f minute: %.2f m/s\n', varName, (dataTable.t(end)*100)/60, v_terminal(end));
     end
-    xline((20 * 100)/60, 'k--', 'Label', 'Separation Child 1');
-    xline((50 * 100)/60, 'k--', 'Label', 'Separation Child 1');
+    xline(5, 'k--', 'Label', 'Separation of Heatshield');
+    xline(50, 'k--', 'Label', 'Separation of Back shell');
+    xline(80, 'k--', 'Label', 'Chute');
+    legend({'Back shell', 'Heatshield', 'Payload', 'Chute', 'Sep (Heat shield)', 'Sep (Back shell)'}, 'Location', 'southeast','Interpreter','latex');
 end
 
 P = abs(P);
@@ -167,27 +170,27 @@ plot((dataTable.t * 100)/60,pressure_at_altitude(:,5),'LineWidth',2,'Color','g')
 title('Pressure vs Time','Interpreter','latex')
 xlabel('Time (minutes)','Interpreter','latex');
 ylabel('Pressure (Pa)','Interpreter','latex');
-legend({'Back shell', 'Heatshield', 'Payload', 'Chute'}, 'Location', 'southeast','Interpreter','latex');
+legend({'Back shell', 'Heatshield', 'Payload', 'Chute', 'Sep (Heat shield)', 'Sep (Back shell)'}, 'Location', 'southeast','Interpreter','latex');
 grid on
 saveas(gcf, 'pressureVsAltitude.png');
 
-% Altitude vs Time Plot
-figure;
-hold on
-plot((dataTable.t * 100)/60,dataTable.h_parent/1000,'LineWidth',2,'Color','blue') 
-plot((dataTable.t * 100)/60,dataTable.h_child1/1000,'LineWidth',2,'Color',[0, 0.5, 0]) 
-plot((dataTable.t * 100)/60,dataTable.h_child2/1000,'LineWidth',2,'Color','red') 
-plot((dataTable.t * 100)/60,dataTable.h_child3/1000,'LineWidth',2,'Color','g') 
-title('Altitude vs. Time','Interpreter','latex');
-xlabel('Time (minutes)','Interpreter','latex');
-ylabel('Altitude (km)','Interpreter','latex');
-ylim([60,100])
-grid on
-xline(5, 'k--', 'Label', 'Separation of Heatshield');
-xline(50, 'k--', 'Label', 'Separation of Back shell');
-xline(80, 'k--', 'Label', 'Chute');
-legend({'Back shell', 'Heatshield', 'Payload', 'Chute', 'Sep (Heat shield)', 'Sep (Back shell)'}, 'Location', 'southeast','Interpreter','latex');
-saveas(gcf, 'AltitudeVsTime.png');
+% % Altitude vs Time Plot
+% figure;
+% hold on
+% plot((dataTable.t * 100)/60,dataTable.h_parent/1000,'LineWidth',2,'Color','blue') 
+% plot((dataTable.t * 100)/60,dataTable.h_child1/1000,'LineWidth',2,'Color',[0, 0.5, 0]) 
+% plot((dataTable.t * 100)/60,dataTable.h_child2/1000,'LineWidth',2,'Color','red') 
+% plot((dataTable.t * 100)/60,dataTable.h_child3/1000,'LineWidth',2,'Color','g') 
+% title('Altitude vs. Time','Interpreter','latex');
+% xlabel('Time (minutes)','Interpreter','latex');
+% ylabel('Altitude (km)','Interpreter','latex');
+% ylim([60,100])
+% grid on
+% xline(5, 'k--', 'Label', 'Separation of Heatshield');
+% xline(50, 'k--', 'Label', 'Separation of Back shell');
+% xline(80, 'k--', 'Label', 'Chute');
+% legend({'Back shell', 'Heatshield', 'Payload', 'Chute', 'Sep (Heat shield)', 'Sep (Back shell)'}, 'Location', 'southeast','Interpreter','latex');
+% saveas(gcf, 'AltitudeVsTime.png');
 
 % Terminal Velocity at Altitude Plot
 figure;
