@@ -5,10 +5,10 @@ BEGIN Scenario
 
     BEGIN Epoch
 
-        Epoch		 28 Feb 2024 20:00:00.000000000
+        Epoch		 16 Jan 2036 12:00:00.000000000
         SmartEpoch		
         BEGIN EVENT
-            Epoch		 28 Feb 2024 20:00:00.000000000
+            Epoch		 16 Jan 2036 12:00:00.000000000
             EventEpoch		
             BEGIN EVENT
                 Type		 EVENT_LINKTO
@@ -22,15 +22,17 @@ BEGIN Scenario
 
     BEGIN Interval
 
-        Start		 28 Feb 2024 20:00:00.000000000
-        Stop		 29 Feb 2024 20:00:00.000000000
+        Start		 16 Jan 2036 12:00:00.000000000
+        Stop		 23 Jan 2036 12:00:00.000000000
         SmartInterval		
         BEGIN EVENTINTERVAL
-            BEGIN Interval
-                Start		 28 Feb 2024 20:00:00.000000000
-                Stop		 29 Feb 2024 20:00:00.000000000
-            END Interval
-            IntervalState		 Explicit
+            StartEvent		
+            BEGIN EVENT
+                Epoch		 16 Jan 2036 12:00:00.000000000
+                EpochState		 Explicit
+            END EVENT
+            Duration		 + 7 days
+            IntervalState		 StartDuration
         END EVENTINTERVAL
 
         EpochUsesAnalStart		 No
@@ -92,196 +94,45 @@ BEGIN Scenario
     BEGIN QuickReports
 
         BEGIN Report
+            Name		 AER
+            Type		 Report
+            BaseDir		 Install
+            Style		 AER
+            AGIViewer		 Yes
+            Instance		 Satellite/Crew_module
+            BEGIN InstanceList
+                Instance		 Satellite/Balloon_system
+            END InstanceList
+            BEGIN TimeData
+                BEGIN Section
+                    SectionNumber		 1
+                    SectionType		 2
+                    ShowIntervals		 No
+                    TimeType		 Availability
+                    SamplingType		 Default
+                    Step		 60
+                    TimeBound		 0
+                END Section
+            END TimeData
+            DisplayOnLoad		 Yes
+            FrameType		 0
+            DockCircleID		 0
+            DockID		 0
+            WindowRectLeft		 324
+            WindowRectTop		 223
+            WindowRectRight		 1821
+            WindowRectBottom		 687
+        END Report
+
+        BEGIN Report
             Name		 Access
             Type		 Report
             BaseDir		 Install
             Style		 Access
             AGIViewer		 Yes
-            Instance		 Satellite/Payload
+            Instance		 Satellite/Crew_module
             BEGIN InstanceList
-                Instance		 Satellite/Crew
-            END InstanceList
-            BEGIN TimeData
-                BEGIN Section
-                    SectionNumber		 1
-                    SectionType		 4
-                    ShowIntervals		 No
-                    TimeType		 Availability
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-            END TimeData
-            DisplayOnLoad		 Yes
-            FrameType		 0
-            DockCircleID		 0
-            DockID		 0
-            WindowRectLeft		 388
-            WindowRectTop		 287
-            WindowRectRight		 1885
-            WindowRectBottom		 751
-        END Report
-
-        BEGIN Report
-            Name		 test
-            Type		 Report
-            BaseDir		 User
-            Style		 test
-            AGIViewer		 Yes
-            Instance		 Satellite/Payload
-            BEGIN TimeData
-                BEGIN Section
-                    SectionNumber		 1
-                    SectionType		 2
-                    ShowIntervals		 No
-                    BEGIN IntervalList
-
-                        DateUnitAbrv		 UTCG
-
-                        BEGIN Intervals
-
-"28 Feb 2024 20:00:00.000000000" "29 Feb 2024 20:00:00.000000000"
-                        END Intervals
-
-                    END IntervalList
-
-                    TimeType		 Interval
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-                BEGIN Section
-                    SectionNumber		 2
-                    SectionType		 2
-                    ShowIntervals		 No
-                    BEGIN IntervalList
-
-                        DateUnitAbrv		 UTCG
-
-                        BEGIN Intervals
-
-"28 Feb 2024 20:00:00.000000000" "29 Feb 2024 20:00:00.000000000"
-                        END Intervals
-
-                    END IntervalList
-
-                    TimeType		 Interval
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-                BEGIN Section
-                    SectionNumber		 3
-                    SectionType		 2
-                    ShowIntervals		 No
-                    BEGIN IntervalList
-
-                        DateUnitAbrv		 UTCG
-
-                        BEGIN Intervals
-
-"28 Feb 2024 20:00:00.000000000" "29 Feb 2024 20:00:00.000000000"
-                        END Intervals
-
-                    END IntervalList
-
-                    TimeType		 Interval
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-            END TimeData
-            DisplayOnLoad		 Yes
-            FrameType		 0
-            DockCircleID		 0
-            DockID		 0
-            WindowRectLeft		 420
-            WindowRectTop		 319
-            WindowRectRight		 1917
-            WindowRectBottom		 783
-        END Report
-
-        BEGIN Report
-            Name		 test1
-            Type		 Report
-            BaseDir		 User
-            Style		 test
-            AGIViewer		 Yes
-            Instance		 Satellite/Payload
-            BEGIN TimeData
-                BEGIN Section
-                    SectionNumber		 1
-                    SectionType		 2
-                    ShowIntervals		 No
-                    BEGIN IntervalList
-
-                        DateUnitAbrv		 UTCG
-
-                        BEGIN Intervals
-
-"28 Feb 2024 20:00:00.000000000" "29 Feb 2024 20:00:00.000000000"
-                        END Intervals
-
-                    END IntervalList
-
-                    TimeType		 Interval
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-                BEGIN Section
-                    SectionNumber		 2
-                    SectionType		 2
-                    ShowIntervals		 No
-                    BEGIN IntervalList
-
-                        DateUnitAbrv		 UTCG
-
-                        BEGIN Intervals
-
-"28 Feb 2024 20:00:00.000000000" "29 Feb 2024 20:00:00.000000000"
-                        END Intervals
-
-                    END IntervalList
-
-                    TimeType		 Interval
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-                BEGIN Section
-                    SectionNumber		 3
-                    SectionType		 2
-                    ShowIntervals		 No
-                    BEGIN IntervalList
-
-                        DateUnitAbrv		 UTCG
-
-                        BEGIN Intervals
-
-"28 Feb 2024 20:00:00.000000000" "29 Feb 2024 20:00:00.000000000"
-                        END Intervals
-
-                    END IntervalList
-
-                    TimeType		 Interval
-                    SamplingType		 Default
-                    TimeBound		 0
-                END Section
-            END TimeData
-            DisplayOnLoad		 Yes
-            FrameType		 0
-            DockCircleID		 0
-            DockID		 0
-            WindowRectLeft		 260
-            WindowRectTop		 159
-            WindowRectRight		 1757
-            WindowRectBottom		 623
-        END Report
-
-        BEGIN Report
-            Name		 Access1
-            Type		 Report
-            BaseDir		 Install
-            Style		 Access
-            AGIViewer		 Yes
-            Instance		 Satellite/Payload
-            BEGIN InstanceList
-                Instance		 Satellite/Crew
+                Instance		 Satellite/Balloon_system
             END InstanceList
             BEGIN TimeData
                 BEGIN Section
@@ -490,17 +341,13 @@ BEGIN Scenario
                 Name		 Satellite
                 BEGIN Favorite
                     Type		 Report
-                    Style		 New Report
-                END Favorite
-                BEGIN Favorite
-                    Type		 Report
-                    BaseDir		 User
-                    Style		 New Report
-                END Favorite
-                BEGIN Favorite
-                    Type		 Report
                     BaseDir		 User
                     Style		 test
+                END Favorite
+                BEGIN Favorite
+                    Type		 Report
+                    BaseDir		 User
+                    Style		 New Report
                 END Favorite
             END Class
         END ReportFavorites
@@ -1388,9 +1235,9 @@ BEGIN Scenario
 
             BEGIN Animation
 
-                StartTime		 28 Feb 2024 20:00:00.000000000
-                EndTime		 29 Feb 2024 20:00:00.000000000
-                CurrentTime		 28 Feb 2024 20:00:00.000000000
+                StartTime		 16 Jan 2036 12:00:00.000000000
+                EndTime		 23 Jan 2036 12:00:00.000000000
+                CurrentTime		 17 Jan 2036 12:00:00.000000000
                 Direction		 Forward
                 UpdateDelta		 10
                 RefreshDelta		 0.010000
@@ -1473,15 +1320,15 @@ BEGIN Scenario
                     PanEnabled		 On
 
                     BEGIN MapAttributes
-                        PrimaryBody		 Earth
+                        PrimaryBody		 Venus
                         SecondaryBody		 Sun
-                        CenterLatitude		 0
-                        CenterLongitude		 0
+                        CenterLatitude		 -0.5787781350482315
+                        CenterLongitude		 -0.2136448456973312
                         ProjectionAltitude		 63621860
                         FieldOfView		 35
                         OrthoDisplayDistance		 20000000
                         TransformTrajectory		 On
-                        EquatorialRadius		 6378137
+                        EquatorialRadius		 6051800
                         BackgroundColor		 #000000
                         LatLonLines		 On
                         LatSpacing		 30
@@ -1502,19 +1349,19 @@ BEGIN Scenario
                         Resolution		 VeryLow
                         CoordinateSys		 ECF
                         UseBackgroundImage		 On
-                        UseBingForBackground		 On
+                        UseBingForBackground		 Off
                         BingType		 Aerial
                         BingLogoHorizAlign		 Right
                         BingLogoVertAlign		 Bottom
-                        BackgroundImageFile		 Basic.bmp
+                        BackgroundImageFile		 Venus_clds.bmp
                         UseNightLights		 Off
                         NightLightsFactor		 3.5
                         UseCloudsFile		 Off
                         BEGIN ZoomLocations
                             BEGIN ZoomLocation
-                                CenterLat		 0
-                                CenterLon		 0
-                                ZoomWidth		 360
+                                CenterLat		 -0.5787781350482315
+                                CenterLon		 -0.2136448456973312
+                                ZoomWidth		 359.99999
                                 ZoomHeight		 180
                             END ZoomLocation
                         END ZoomLocations
@@ -1560,34 +1407,14 @@ BEGIN Scenario
 
                     BEGIN MapList
                         BEGIN Detail
-                            Alias		 RWDB2_Coastlines
-                            Show		 Yes
-                            Color		 #8fbc8f
+                            Alias		 crater
+                            Show		 No
+                            Color		 #00ff00
                         END Detail
                         BEGIN Detail
-                            Alias		 RWDB2_International_Borders
+                            Alias		 mons
                             Show		 No
-                            Color		 #8fbc8f
-                        END Detail
-                        BEGIN Detail
-                            Alias		 RWDB2_Islands
-                            Show		 No
-                            Color		 #8fbc8f
-                        END Detail
-                        BEGIN Detail
-                            Alias		 RWDB2_Lakes
-                            Show		 No
-                            Color		 #87cefa
-                        END Detail
-                        BEGIN Detail
-                            Alias		 RWDB2_Provincial_Borders
-                            Show		 No
-                            Color		 #8fbc8f
-                        END Detail
-                        BEGIN Detail
-                            Alias		 RWDB2_Rivers
-                            Show		 No
-                            Color		 #87cefa
+                            Color		 #00ff00
                         END Detail
                     END MapList
 
@@ -1631,7 +1458,6 @@ BEGIN Scenario
                     BEGIN RecordMovie
                         OutputFormat		 VIDEO
                         SdfSelected		 No
-                        Directory		 M:\dev\AGI STK\Level 3 Related\AnalysisWorkbench_Track2\Scenario2
                         BaseName		 Frame
                         Digits		 4
                         Frame		 0
@@ -1691,7 +1517,7 @@ BEGIN Scenario
 
                     BEGIN Style
                         Name		 DefaultWithBing
-                        Time		 0
+                        Time		 -374947200
                         UpdateDelta		 10
 
                         BEGIN MapAttributes
@@ -1879,7 +1705,7 @@ BEGIN Scenario
 
                     BEGIN Style
                         Name		 DefaultWithoutBing
-                        Time		 0
+                        Time		 -374947200
                         UpdateDelta		 10
 
                         BEGIN MapAttributes
@@ -2094,8 +1920,8 @@ BEGIN Scenario
 
         Class Satellite
 
-            Crew		
-            Payload		
+            Balloon_system		
+            Crew_module		
 
         END Class
 
@@ -2105,15 +1931,11 @@ BEGIN Scenario
         Instance *
             *		
         END Instance
-        Instance Satellite/Crew
-            Satellite/Crew		
-            Satellite/Crew/Sensor/Sensor1		
+        Instance Satellite/Balloon_system
+            Satellite/Balloon_system		
         END Instance
-        Instance Satellite/Crew/Sensor/Sensor1
-            Satellite/Crew/Sensor/Sensor1		
-        END Instance
-        Instance Satellite/Payload
-            Satellite/Payload		
+        Instance Satellite/Crew_module
+            Satellite/Crew_module		
         END Instance
     END References
 
